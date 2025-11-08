@@ -157,3 +157,94 @@ Also add a [UI_COMPONENT] that displays [DATA] with sorting and pagination. Make
 - Claude knows the conventions better than I do
 - I trust the output will be sensible
 - This is what LLMs are great at
+
+** Cleanup
+*** Talk
+- Remove LLM idioms and artifacts
+- Make code look human-written
+- Follow project conventions
+- This is professional polish
+
+*** Claude
+#+begin_src markdown
+Please clean up the code we just wrote:
+
+- Move all imports to the top of the file
+- Remove "before/after" style comments
+- Remove placeholder comments like "TODO" or "FIXME" that we've already implemented
+- Delete any commented-out old code
+- Remove overly verbose comments that explain obvious things
+- Consolidate any duplicate code
+- Make sure formatting matches the rest of the project
+
+Keep the code functionally identical, just make it look production-ready.
+#+end_src
+
+*** Feel
+- This makes it feel like my code
+- Ready to commit
+- No evidence of LLM artifacts
+
+** Ship It
+*** Talk
+- Commit, push, update tracking, communicate
+- Automate the ceremony
+- Close the loop with stakeholders
+- One command to finish everything
+
+*** Claude
+#+begin_src markdown
+Please commit and push the changes, then update [PROJECT_MANAGEMENT_TOOL] issue [ISSUE_ID] with the progress, and send a status email to [STAKEHOLDERS].
+
+For the issue update:
+- Mark the relevant tasks as complete
+- Add a comment summarizing what was implemented
+- Update the status if needed
+
+For the email:
+- Brief summary of what was done
+- Link to the commit/PR
+- Any relevant notes or next steps
+#+end_src
+
+*** Tooling
+#+begin_src bash
+# Automated commit, push, and communication
+clg() {
+    unset ANTHROPIC_API_KEY
+    claude -p -c "Your task is to commit and push ONLY the uncommitted changes in this git repository.
+
+CRITICAL: You do NOT have access to previous commits in your history. Some changes may already
+be committed. You must ONLY work with the uncommitted changes shown by 'git status' and 'git diff'.
+
+WORKFLOW:
+1. Run 'git status' to see what files are currently uncommitted (modified/added/deleted)
+2. Run 'git diff' to review the actual uncommitted changes
+3. Stage these uncommitted changes with 'git add'
+4. Create a commit with a single-line descriptive message based ONLY on the uncommitted changes
+5. Push the changes with 'git push'
+
+DO NOT reference or include already-committed changes in your commit message.
+DO NOT reference the current branch or issue number in the commit message
+
+After successfully completing all steps, output a brief success message and exit immediately.
+Do not wait for further instructions or ask any questions.
+
+IMPORTANT TOOL RESTRICTIONS:
+- You are ONLY allowed to use these tools:
+  * Bash(git status:*) - to check repository status
+  * Bash(git diff:*) - to view changes
+  * Bash(git add:*) - to stage files
+  * Bash(git commit:*) - to commit changes
+  * Bash(git push:*) - to push changes
+- You are NOT allowed to use any other tools including Read, Write, Edit, Grep, Glob, or any other Bash commands
+- Stay focused on the git workflow only" \
+    --allowedTools "Bash(git status:*)" "Bash(git diff:*)" "Bash(git add:*)" "Bash(git commit:*)" "Bash(git push:*)"
+}
+#+end_src
+
+*** Feel
+- Everything is wrapped up in one go
+- Stakeholders are informed
+- Ready to move to the next task
+- No manual ceremony
