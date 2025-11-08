@@ -1,0 +1,79 @@
+#+title: Claude Code in Practice: Making It Work on Real Projects
+
+* Template
+*** Talk
+*** Claude
+#+begin_src markdown
+#+end_src
+*** Tooling
+
+* Documentation
+** CLAUDE.md
+** llm/myapp.md
+
+* Building a feature
+** Exploration and Research
+*** Talk
+- Make Claude use a lot of tokens
+- Great way to refresh own understanding
+- Follow up for additional details
+- Stepwise approach makes for good todo items
+*** Claude
+#+begin_src markdown
+Hi Claude, lets start out by researching how [topic] works in the system. First read the current issue in [project management tool] and any referenced emails as well as any relevant docs in the @llm folder. Then read these files in full:
+
+- @src/apps.py
+- @src/urls.py
+
+After that reference relevant classes in /home/r/ws/2025-claude-code-ida/myproject/src/longfile.py and do addtional relevant research.
+
+Finally summarize your findings.
+#+end_src
+*** Tooling
+#+begin_src bash
+$ realpath src/apps.py src/urls.py 
+/home/r/ws/2025-claude-code-ida/myproject/src/apps.py
+/home/r/ws/2025-claude-code-ida/myproject/src/urls.py
+#+end_src
+
+#+begin_src elisp
+(defun rk-realpath ()
+  "Copy the full path of current buffer to kill ring"
+  (interactive)
+  (kill-new (buffer-file-name))
+  (message "Copied: %s" (buffer-file-name)))
+
+(defun rk-realpath-visible-buffers ()
+  "Copy a newline separated list of full paths of visible buffers to kill ring."
+  (interactive)
+  (let ((paths '()))
+    ;; Collect paths from all visible buffers
+    (dolist (frame (frame-list))
+      (dolist (window (window-list frame))
+        (let* ((buffer (window-buffer window))
+               (path (buffer-file-name buffer)))
+          (when path
+            (push path paths)))))
+    
+    ;; Create newline separated string and kill it
+    (let ((paths-str (mapconcat #'identity (delete-dups (nreverse paths)) "\n")))
+      (kill-new paths-str)
+      (message "Copied %d visible buffer paths" (length (split-string paths-str "\n" t))))))
+#+end_src
+
+** Planning
+*** Talk
+- What
+- How
+- Don't use plan mode
+- "Don't code"
+*** Claude
+#+begin_src markdown
+Today we are building [feature], I'm thinking we are using this overall approach
+
+- foo
+- bar
+
+Any questions? Feel free to do additional research.
+#+end_src
+*** Tooling

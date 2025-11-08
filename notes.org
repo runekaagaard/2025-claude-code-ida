@@ -1,0 +1,64 @@
+* Root -> Leaf
+gewokewogk
+** How does this work
+- Foo
+** And this?
+- NICE!?
+- WOOT?
+
+* Getting started
+- max plan, can't share email with team, use an alias
+- npm install
+- cd to ROOT of directory and claude --mcp-config --continue/resume
+- settings/permissions/etc.
+
+* Optimize for Quality
+- When reaching the valley of confusion backtrack and carve a new path
+- Minimize available tools. Build your own domain specific tools with as few num as possible
+- Keep it simple, BREAD
+- llm docs
+- CLAUDE.md
+- It's random try again. Hard to get a instinct for random quality
+
+* Usage
+- Research, use many tokens
+- Think hard, harder, ultrathink
+- Normal, Auto Accept, Planning
+- Memory
+- Don't code.
+- Branch golden context
+- Don't compact
+
+* Workspaces
+- A fast way to get to a running workspace. If it's OK to have bad dev workflows in an org it's also OK to have
+  bad code and deployment practices
+
+* Commands
+- VERY useful
+
+* Agents
+- Doesn't share context
+- Great for tangential work
+- Circuit break not great
+
+* Results
+- Is it faster? Probably not, but it's fun
+- GREAT for prototyping, boilerplate, extending existing welldefined systems
+- BAD for loose specs in strict environments
+
+* Research
+- Does commands flood context
+- Does @ flood context
+
+* Misc
+- Producing AI content is great, consuming kind-a-sucks
+- If you merge it you own it so better be sure it's a great solution
+- Use AI generation time for thinking, planning, testing and reading the code
+- Random
+- Inner imports
+- 25000, workaround use filesystem mcp server
+
+* Misc2
+- git hook til code format, AFTER
+- clg
+- clean top of imports, before/after comments

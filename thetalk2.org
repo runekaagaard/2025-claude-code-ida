@@ -1,0 +1,89 @@
+#+title: Claude Code in Practice: Making It Work on Real Projects
+
+* Template
+*** Talk
+*** Claude
+#+begin_src markdown
+#+end_src
+*** Tooling
+
+* Documentation
+** CLAUDE.md
+** llm/ folder with project-specific docs
+
+* Building a Feature
+** Exploration and Research
+*** Talk
+- Make Claude use a lot of tokens
+- Great way to refresh own understanding
+- Follow up for additional details
+- Stepwise approach makes for good todo items
+
+*** Claude
+#+begin_src markdown
+Hi Claude, let's start by researching how [TOPIC] works in the system.
+
+First read:
+- The current issue in [PROJECT MANAGEMENT TOOL]
+- Any referenced emails
+- Relevant documentation in the @llm folder
+
+Then read these core files in full:
+- @[FILE_1]
+- @[FILE_2]
+
+After that, reference relevant classes in [LONG_FILE] and do additional research as needed.
+
+Finally, summarize your findings.
+#+end_src
+
+*** Tooling
+#+begin_src bash
+# Get absolute paths for files
+$ realpath [file1] [file2]
+#+end_src
+
+#+begin_src elisp
+(defun rk-realpath ()
+  "Copy the full path of current buffer to kill ring"
+  (interactive)
+  (kill-new (buffer-file-name))
+  (message "Copied: %s" (buffer-file-name)))
+
+(defun rk-realpath-visible-buffers ()
+  "Copy a newline separated list of full paths of visible buffers to kill ring."
+  (interactive)
+  (let ((paths '()))
+    ;; Collect paths from all visible buffers
+    (dolist (frame (frame-list))
+      (dolist (window (window-list frame))
+        (let* ((buffer (window-buffer window))
+               (path (buffer-file-name buffer)))
+          (when path
+            (push path paths)))))
+
+    ;; Create newline separated string and kill it
+    (let ((paths-str (mapconcat #'identity (delete-dups (nreverse paths)) "\n")))
+      (kill-new paths-str)
+      (message "Copied %d visible buffer paths" (length (split-string paths-str "\n" t))))))
+#+end_src
+
+** Planning
+*** Talk
+- What are we building
+- How will we build it
+- Don't use plan mode
+- "Don't code yet" - just planning
+
+*** Claude
+#+begin_src markdown
+Today we are building [FEATURE]. I'm thinking we use this overall approach:
+
+- [STEP_1]
+- [STEP_2]
+- [STEP_3]
+
+Any questions? Feel free to do additional research before we start coding.
+#+end_src
+
+*** Tooling
