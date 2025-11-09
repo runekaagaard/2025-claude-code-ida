@@ -1,0 +1,51 @@
+<!--#include virtual="_header.html" -->
+
+<!-- Content -->
+<div class="max-w-4xl mx-auto space-y-12">
+    <!-- Title -->
+    <div class="space-y-3">
+        <h1 class="text-5xl font-bold text-gray-900">Ship It</h1>
+        <h2 class="text-2xl text-gray-500 font-medium">Tooling</h2>
+    </div>
+
+    <!-- Main Content -->
+    <div class="bg-gray-100 border border-gray-200 rounded-2xl p-8">
+        <pre class="text-sm leading-relaxed text-gray-700"><code># Automated commit and push
+clg() {
+    unset ANTHROPIC_API_KEY
+    claude -p -c "Your task is to commit and push
+ONLY the uncommitted changes in this git repository.
+
+WORKFLOW:
+1. Run 'git status' to see uncommitted files
+2. Run 'git diff' to review changes
+3. Stage changes with 'git add'
+4. Commit with a descriptive message
+5. Push with 'git push'
+
+DO NOT reference already-committed changes.
+After completing, output a brief success message
+and exit immediately." \
+    --allowedTools "Bash(git status:*)" \
+                   "Bash(git diff:*)" \
+                   "Bash(git add:*)" \
+                   "Bash(git commit:*)" \
+                   "Bash(git push:*)"
+}</code></pre>
+    </div>
+</div>
+
+<!-- Navigation -->
+<nav class="fixed bottom-8 right-8 flex gap-3 text-xs text-gray-400">
+    <a href="slide-07b-ship-it-prompt.html" class="hover:text-gray-600">
+        ← Prev
+    </a>
+    <a href="index.html" class="hover:text-gray-600">
+        Index
+    </a>
+    <a href="slide-07d-ship-it-feel.html" class="hover:text-gray-600">
+        Next →
+    </a>
+</nav>
+
+<!--#include virtual="_footer.html" -->
