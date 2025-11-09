@@ -1,24 +1,35 @@
 <!--#include virtual="_header.html" -->
 
+<!-- Navigation -->
+<nav>
+    <a href="slide-02b-exploration-prompt.html" id="prev-link">← Prev</a>
+    <a href="index.html">Index</a>
+    <a href="slide-03a-planning.html" id="next-link">Next →</a>
+</nav>
+
 <!-- Content -->
-<div class="max-w-4xl mx-auto space-y-12">
-    <!-- Title -->
-    <div class="space-y-3">
-        <h1 class="text-5xl font-bold text-gray-900">Exploration and Research</h1>
-        <h2 class="text-2xl text-gray-500 font-medium">Tooling</h2>
+<div class="grid grid-cols-[minmax(250px,20%)_1fr] gap-[5vw] h-full">
+    <!-- Left Sidebar -->
+    <div class="pt-4">
+        <div class="space-y-3">
+            <h1 class="text-4xl font-bold text-gray-900 leading-tight">Exploration and Research</h1>
+            <h2 class="text-xl text-gray-500 font-medium">Tooling</h2>
+        </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="space-y-6">
-        <div class="bg-gray-100 border border-gray-200 rounded-2xl p-6">
-            <pre class="text-base leading-relaxed text-gray-700"><code># Get absolute paths for files
+    <!-- Right Content Area -->
+    <div class="pt-4">
+        <div class="w-full">
+            <div class="space-y-6">
+                <div class="bg-gray-100 border border-gray-200 rounded-2xl p-6">
+                    <pre class="text-base leading-relaxed text-gray-700"><code># Get absolute paths for files
 $ realpath [file1] [file2]</code></pre>
-        </div>
+                </div>
 
-        <div class="text-sm text-gray-500">Emacs helper functions:</div>
+                <div class="text-sm text-gray-500">Emacs helper functions:</div>
 
-        <div class="bg-gray-100 border border-gray-200 rounded-2xl p-6">
-            <pre class="text-sm leading-relaxed text-gray-700"><code>(defun rk-realpath ()
+                <div class="bg-gray-100 border border-gray-200 rounded-2xl p-6">
+                    <pre class="text-sm leading-relaxed text-gray-700"><code>(defun rk-realpath ()
   "Copy full path of current buffer"
   (interactive)
   (kill-new (buffer-file-name))
@@ -28,21 +39,10 @@ $ realpath [file1] [file2]</code></pre>
   "Copy paths of all visible buffers"
   (interactive)
   ...)</code></pre>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-<!-- Navigation -->
-<nav class="fixed bottom-8 right-8 flex gap-3 text-xs text-gray-400">
-    <a href="slide-02b-exploration-prompt.html" class="hover:text-gray-600">
-        ← Prev
-    </a>
-    <a href="index.html" class="hover:text-gray-600">
-        Index
-    </a>
-    <a href="slide-03a-planning.html" class="hover:text-gray-600">
-        Next →
-    </a>
-</nav>
 
 <!--#include virtual="_footer.html" -->

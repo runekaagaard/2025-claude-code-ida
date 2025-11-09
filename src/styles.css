@@ -1,0 +1,46 @@
+/* Common Styles for Presentation */
+
+/* Navigation */
+nav {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+nav a {
+    transition: color 0.15s ease;
+}
+
+nav a:hover {
+    color: #4b5563;
+}
+
+/* Code Blocks */
+pre {
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.75rem;
+}
+
+pre code {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+/* Inline Code */
+code {
+    font-size: 1.125rem; /* 18px */
+}
+
+/* Code in bullet lists */
+.content-area code {
+    font-size: 1.125rem;
+}
+
+/* Tooling code blocks (smaller) */
+.tooling-code pre {
+    font-size: 0.875rem; /* 14px */
+}

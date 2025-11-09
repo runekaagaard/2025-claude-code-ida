@@ -1,16 +1,27 @@
 <!--#include virtual="_header.html" -->
 
-<!-- Content -->
-<div class="max-w-4xl mx-auto space-y-12">
-    <!-- Title -->
-    <div class="space-y-3">
-        <h1 class="text-5xl font-bold text-gray-900">Exploration and Research</h1>
-        <h2 class="text-2xl text-gray-500 font-medium">Claude Prompt</h2>
+<!-- Navigation -->
+<nav>
+    <a href="slide-02a-exploration.html" id="prev-link">← Prev</a>
+    <a href="index.html">Index</a>
+    <a href="slide-02c-exploration-tooling.html" id="next-link">Next →</a>
+</nav>
+
+<!-- Two Column Layout -->
+<div class="grid grid-cols-[minmax(250px,20%)_1fr] gap-[5vw] h-full">
+    <!-- Left Sidebar: Title & Visual Space -->
+    <div class="pt-4">
+        <div class="space-y-3">
+            <h1 class="text-4xl font-bold text-gray-900 leading-tight">Exploration and Research</h1>
+            <h2 class="text-xl text-gray-500 font-medium">Claude Prompt</h2>
+        </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="bg-gray-100 border border-gray-200 rounded-2xl p-8">
-        <pre class="text-lg leading-relaxed text-gray-800"><code>Hi Claude, let's start by researching how [TOPIC]
+    <!-- Right Content Area -->
+    <div class="pt-4">
+        <div class="w-full">
+            <div class="bg-gray-100 border border-gray-200 rounded-2xl p-8">
+                <pre class="text-lg leading-relaxed text-gray-800"><code>Hi Claude, let's start by researching how [TOPIC]
 works in the system.
 
 First read:
@@ -26,20 +37,9 @@ After that, reference relevant classes in
 [LONG_FILE] and do additional research as needed.
 
 Finally, summarize your findings.</code></pre>
+            </div>
+        </div>
     </div>
 </div>
-
-<!-- Navigation -->
-<nav class="fixed bottom-8 right-8 flex gap-3 text-xs text-gray-400">
-    <a href="slide-02a-exploration.html" class="hover:text-gray-600">
-        ← Prev
-    </a>
-    <a href="index.html" class="hover:text-gray-600">
-        Index
-    </a>
-    <a href="slide-02c-exploration-tooling.html" class="hover:text-gray-600">
-        Next →
-    </a>
-</nav>
 
 <!--#include virtual="_footer.html" -->
