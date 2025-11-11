@@ -7,9 +7,33 @@
 #+end_src
 *** Tooling
 
+* Title screen
+Claude Code in Practice
+Making It Work on Real Projects
+
+* About
+** Me
+- Rune Kaagaard
+- Lead Developer at Prescriba (psychological counseling platform)
+- Building AI-powered developer tools
+
+** AI Projects
+- MCP Alchemy: Database MCP server for Claude
+- Connects Claude to PostgreSQL, MySQL, SQLite, and more
+- AI-assisted SQL queries and schema exploration
+- Production-ready, in daily use
+
+** This Talk
+- Real-world Claude Code workflows
+- Documentation strategies for large codebases
+- Automation and tooling patterns
+- What actually works in production
+
 * Getting started
 $ npm install -g @anthropic-ai/claude-code
 $ claude
+
+* Claude Code Basics
 
 * Agent Documentation
 *** Talk
@@ -61,6 +85,89 @@ Dear claude, please research how to create a CLAUDE.md file, then read all the f
 ...
 
 Feel free to ask questions first.
+#+end_src
+
+* Workflow Command
+** Talk
+- Worktrees over branch switching
+- Each task gets isolated directory
+- No context switching overhead
+- Work on multiple features simultaneously
+
+** Command
+#+begin_src markdown
+---
+description: Manage issues, branches, and PRs with worktrees
+---
+
+Handle workflow: $ARGUMENTS
+
+## Actions
+
+Parse intent:
+- "r560" → Create worktree for existing branch
+- "branch r555" → Create branch + worktree for existing issue
+- "new [title]" → Create issue + branch + worktree
+- "pr" → Create pull request
+- "close" → Close workflow
+
+## Configuration
+
+- Branch: [num]_[name]_r[issue]
+- Worktree: ~/worktrees/[branch]
+- PR title: [title] r[issue]
+- Default: Always create worktrees, never switch branches
+
+## Worktree Setup
+
+```bash
+git worktree add -b BRANCH ~/worktrees/BRANCH origin/master
+cd ~/worktrees/BRANCH
+git commit --allow-empty -m "Initial commit rISSUE"
+git push -u origin BRANCH
+```
+
+## Output
+
+```
+✅ Created:
+- Issue #[NUM]: [TITLE]
+  [ISSUE_URL]
+- Branch: [BRANCH]
+- Worktree: ~/worktrees/[BRANCH]
+```
+
+## Workspace Setup
+
+Optional: "setup workspace" or "terminator workspace"
+
+Creates terminal layout with:
+- Claude CLI (with --continue for session persistence)
+- Git status display
+- Dev server (auto-detects free port)
+- Asset watcher (auto-detects free port)
+- Tab titled with branch name
+
+Everything ready to start coding immediately.
+#+end_src
+
+** Tooling
+#+begin_src Makefile
+# Symlink approach (fast, shares resources)
+worktree-setup-symlink:
+    ln -sf ~/main/node_modules .
+    ln -sf ~/main/settings_local.py settings_local.py
+    ln -sf ~/main/media/ media
+    ln -sf ~/main/webpack-stats.json .
+    # ... symlink all non-code assets
+
+# Full copy approach (isolated, slower)
+worktree-setup-full:
+    rsync -a ~/main/node_modules/ node_modules/
+    cp ~/main/settings_local.py settings_local.py
+    rsync -a ~/main/media/ media/
+    cp ~/main/webpack-stats.json .
+    # ... copy all non-code assets
 #+end_src
 
 * Building a Feature
