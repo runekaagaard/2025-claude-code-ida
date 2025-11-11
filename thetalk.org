@@ -1,93 +1,243 @@
 #+title: Claude Code in Practice: Making It Work on Real Projects
 
-* Template
-*** Talk
-*** Claude
-#+begin_src markdown
-#+end_src
-*** Tooling
-
-* Title screen
+* Title
 Claude Code in Practice
 Making It Work on Real Projects
 
 * About
 ** Me
 - Rune Kaagaard
-- Lead Developer at Prescriba (psychological counseling platform)
+- Lead Developer at Prescriba
 - Building AI-powered developer tools
-
-** AI Projects
 - MCP Alchemy: Database MCP server for Claude
-- Connects Claude to PostgreSQL, MySQL, SQLite, and more
-- AI-assisted SQL queries and schema exploration
-- Production-ready, in daily use
 
 ** This Talk
-- Real-world Claude Code workflows
+- Real workflows that work in production
 - Documentation strategies for large codebases
 - Automation and tooling patterns
-- What actually works in production
+- What Anthropic learned building Claude Code with Claude Code
 
-* Getting started
-$ npm install -g @anthropic-ai/claude-code
-$ claude
+* Getting Started
+** Talk
+- npm install -g @anthropic-ai/claude-code
+- Three modes: Normal, Plan, Auto-accept
+- Start with Plan mode
+- Always use git branches
 
-* Claude Code Basics
-
-* Agent Documentation
-*** Talk
-- Codebase too large for context window
-- Create structured documentation in llm/ folder
-- Give each app/module its own .md file
-- Document cross-cutting concerns
-- Reference with @llm/topic.md
-** Tooling
+** Claude
 #+begin_src bash
-# Install repomix and generate documentation for each app
-$ npm install -g repomix
-
-$ for app in src/apps/*; do
-    appname=$(basename $app)
-    repomix --include "$app/**" --style markdown --output "packed-$appname.md"
-    claude -p -c "Read @packed-$appname.md and @llm/how_to_document_an_app.md then generate llm/$appname.md"
-  done
+npm install -g @anthropic-ai/claude-code
+claude
 #+end_src
 
+* Philosophy
+** Talk
+- Claude = fast mid-level dev with perfect memory
+- You shift from engineer to agent manager
+- Needs direction, reviews, guardrails
+- Not a senior architect (yet)
+- 90% of Claude Code written by Claude Code
+
+** Key Insight
+Context management > prompt engineering
+
+* Documentation
+** CLAUDE.md
+*** Talk
+- Project memory that persists across sessions
+- Hierarchical: global → project → directory
+- Tech stack, commands, architecture, conventions
+- Keep under 500 lines
+- Update regularly
+
+*** Structure
+- Tech stack and versions
+- Build/test/deploy commands
+- Architecture patterns
+- Code style conventions
+- Do Not sections
+- Known issues and edge cases
+
+** llm/ Folder
+*** Talk
+- Module-specific documentation
+- Cross-cutting concerns
+- Too detailed for CLAUDE.md
+- Reference with @llm/topic.md
+
+*** Tooling
+#+begin_src bash
+# Generate with repomix
+for app in src/apps/*; do
+  appname=$(basename $app)
+  repomix --include "$app/**" --style markdown \
+    --output "packed-$appname.md"
+  claude -p -c "Read @packed-$appname.md and \
+    @llm/how_to_document_an_app.md then \
+    generate llm/$appname.md"
+done
+#+end_src
+
+* The Workflow
+** Explore
+*** Talk
+- Load relevant context
+- Tell Claude NOT to code yet
+- Use @ for file references
+- Build understanding incrementally
+
+*** Claude
 #+begin_src markdown
-# Interactive session to document cross-cutting concerns
+Read and understand the auth system:
+@src/services/auth.ts
+@src/middleware/auth.ts
 
-Claude, please read all the app documentation files in @llm/ and research the cross-cutting concerns:
-- How do apps integrate with each other?
-- What signals are sent/received?
-- What background tasks exist?
-- What are the permission models?
-- What external integrations are used?
-
-Then update each llm/[app].md file with these details.
+Don't make changes yet. Just explore.
 #+end_src
 
-* CLAUDE.md
-- Project description
-- Apps
-- Deprecated apps
-- Tech Stack
-- Terminology
-- Interesting makefile targets, tests and management commands
-- Memory
+** Plan
+*** Talk
+- Use Shift+Tab for plan mode
+- Create explicit implementation plan
+- Review before proceeding
+- Test-driven: write tests first
 
-! Don't use app specific CLAUDE.md files
-** Tooling
+*** Claude
 #+begin_src markdown
-Dear claude, please research how to create a CLAUDE.md file, then read all the files in the @llm folder in full and generate a CLAUDE.md for this project. I'm thinking this structure:
-
-- Project description
-...
-
-Feel free to ask questions first.
+Create a detailed plan for adding OAuth support.
+Include test strategy.
+I'll review before you proceed.
 #+end_src
 
-* Workflow Command
+** Code
+*** Talk
+Root and Leaves:
+- Root: API interfaces, types, test scaffolding
+- Leaves: UI, boilerplate, implementation details
+- Choose based on problem
+
+*** Claude
+#+begin_src markdown
+Write tests for OAuth flow first.
+Then implement to make tests pass.
+#+end_src
+
+*** Feel
+- I'm in control
+- Not surprised by output
+- Great input → great output
+
+** Ship
+*** Talk
+- Commit with meaningful messages
+- Update documentation
+- Create PR with context
+- Always use git branches
+
+*** Tooling
+#+begin_src bash
+# Auto-generate commit messages
+clg() {
+  claude -p "Generate conventional commit for staged changes"
+}
+#+end_src
+
+*** Feel
+- Everything wrapped up
+- Ready for next task
+- No manual ceremony
+
+* Context Management
+** Talk
+- 200K tokens (1M via API)
+- Everything counts (15K baseline)
+- Performance degrades after 80%
+- Lost-in-the-middle problem
+- /clear frequently
+
+** Practice
+- Clear between features
+- Monitor with /context
+- Stay under 80% for quality
+- Multiple short sessions > one long session
+- Claude 4.5+ discovers state from filesystem
+
+* Built-in Tools
+** Talk
+- File operations: Read, Write, Edit, Grep
+- Execution: Bash, npm, pip, cargo
+- Testing: Vitest, Jest, Pytest
+- Version control: Full git operations
+- Web access: WebFetch, Curl
+
+** Permissions
+*** Talk
+- Auto-allowed, Prompt, or Denied
+- Glob patterns for rules
+- Sandboxed by default
+- 84% fewer permission prompts
+
+*** Tooling
+#+begin_src json
+{
+  "permissions": {
+    "allow": ["Read(*)", "Edit(src/**)", "Bash(npm test)"],
+    "deny": ["Read(.env)", "Delete(*)"]
+  }
+}
+#+end_src
+
+* MCP Servers
+** Talk
+- Extend Claude with external tools
+- Database access, browser automation, APIs
+- Configure in .mcp.json
+- Use when CLI tools insufficient
+
+** Example
+#+begin_src json
+{
+  "mcpServers": {
+    "database": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-postgres"]
+    }
+  }
+}
+#+end_src
+
+** Use Cases
+- Database queries and exploration
+- Browser automation for UI testing
+- External API integrations
+- Design file access (Figma)
+- Error tracking (Sentry)
+
+* Hooks & Automation
+** Talk
+- Deterministic quality gates
+- No prompts required
+- Run before/after tool use
+- Enforce standards automatically
+
+** Patterns
+#+begin_src json
+{
+  "matcher": "Edit|Write",
+  "hooks": [{
+    "type": "command",
+    "command": "prettier --write \"$CLAUDE_FILE_PATHS\""
+  }]
+}
+#+end_src
+
+** Examples
+- Auto-format on save
+- Type-check on edit
+- Block commits until tests pass
+- Lint before push
+
+* Advanced: Workflow Command
 ** Talk
 - Worktrees over branch switching
 - Each task gets isolated directory
