@@ -43,3 +43,20 @@ p code, li code {
     font-size: 0.9em;
     color: #D97757;
 }
+
+/* List styling to match paragraph flow */
+.space-y-6 ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: contents; /* Make ul transparent to space-y-6 */
+}
+
+.space-y-6 ul li {
+    display: block;
+}
+
+/* Remove extra spacing from p tags inside li */
+.space-y-6 ul li > p {
+    margin: 0;
+}
