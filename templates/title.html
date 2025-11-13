@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="h-full flex flex-col items-center justify-center text-center space-y-6">
+    <h1 class="text-5xl font-bold bg-gradient-to-br from-claude-orange via-orange-400 to-amber-500 bg-clip-text text-transparent">
+        {{ title }}
+    </h1>
+    {% if subtitle %}
+    <p class="text-xl text-gray-500 font-light">
+        {{ subtitle }}
+    </p>
+    {% endif %}
+    {% for item in content %}
+    <p class="text-xl text-gray-500 font-light">
+        {{ item }}
+    </p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Two Column Layout -->
+<div class="grid grid-cols-[minmax(250px,20%)_1fr] gap-[5vw] h-full">
+    <!-- Left Sidebar: Title -->
+    <div class="pt-4">
+        <div class="space-y-3">
+            <h1 class="text-4xl font-bold text-gray-900 leading-tight">{{ title }}</h1>
+            {% if subtitle %}
+            <h2 class="text-xl text-gray-500 font-medium">{{ subtitle }}</h2>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Right Content Area -->
+    <div class="pt-4">
+        <div class="w-full {% if code_blocks|length > 1 %}space-y-8{% endif %}">
+            {% for code_block in code_blocks %}
+            <div class="bg-gray-100 border border-gray-200 rounded-2xl p-8">
+                <pre class="leading-relaxed text-gray-800"><code>{{ code_block.code }}</code></pre>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
