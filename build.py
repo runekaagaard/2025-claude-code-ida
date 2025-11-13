@@ -10,7 +10,8 @@ import re
 
 
 def slugify(text):
-    """Convert text to filename: lowercase, spaces to dashes"""
+    """Convert text to filename: lowercase, spaces to dashes, remove invalid chars"""
+    text = re.sub(r'[^\w\s-]', '', text)  # Remove special chars
     return text.lower().replace(' ', '-')
 
 

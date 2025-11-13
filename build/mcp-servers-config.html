@@ -66,26 +66,53 @@
     <!-- Left Sidebar: Title -->
     <div class="pt-4">
         <div class="space-y-3">
-            <h1 class="text-4xl font-bold text-gray-900 leading-tight">Evolution</h1>
+            <h1 class="text-4xl font-bold text-gray-900 leading-tight">MCP Servers</h1>
+            
+            <h2 class="text-xl text-gray-500 font-medium">Config</h2>
             
         </div>
     </div>
 
     <!-- Right Content Area -->
     <div class="pt-4">
-        <div class="space-y-6 text-2xl text-gray-700 leading-relaxed">
+        <div class="w-full ">
             
-            <p>1920 Physical cut-up method with scissors</p>
-            
-            <p>1995 Verbasizer 2.0 digital randomization</p>
-            
-            <p>2019 AI Dungeon interactive text generation</p>
-            
-            <p>2022 ChatGPT browser-based prompting</p>
-            
-            <p>2024 Tools/MCP servers provide filesystem access</p>
-            
-            <p>2025 Agentic coding assistants with full workflow automation</p>
+            <div class="bg-gray-100 border border-gray-200 rounded-2xl p-8">
+                <pre class="leading-relaxed text-gray-800"><code>{
+  "mcpServers": {
+    "multiply": {
+      "command": "python",
+      "args": ["/path/to/mcp-multiply/server.py"]
+    },
+    "database": {
+      "command": "uvx",
+      "args": ["--from", "mcp-alchemy==2025.8.15.91819",
+               "--refresh-package", "mcp-alchemy", "mcp-alchemy"],
+      "env": {
+        "DB_URL": "sqlite:///path/to/database.db"
+      }
+    },
+    "email": {
+      "command": "uvx",
+      "args": ["--from", "mcp-notmuch-sendmail==2025.04.09.174710",
+               "--refresh-package", "mcp-notmuch-sendmail", "mcp-notmuch-sendmail"],
+      "env": {
+        "NOTMUCH_DATABASE_PATH": "/path/to/notmuch/db",
+        "SENDMAIL_FROM_EMAIL": "you@example.com"
+      }
+    },
+    "redmine": {
+      "command": "uvx",
+      "args": ["--from", "mcp-redmine==2025.09.03.141435",
+               "--refresh-package", "mcp-redmine", "mcp-redmine"],
+      "env": {
+        "REDMINE_URL": "https://redmine.example.com",
+        "REDMINE_API_KEY": "your-api-key"
+      }
+    }
+  }
+}</code></pre>
+            </div>
             
         </div>
     </div>

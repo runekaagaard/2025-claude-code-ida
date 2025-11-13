@@ -66,26 +66,48 @@
     <!-- Left Sidebar: Title -->
     <div class="pt-4">
         <div class="space-y-3">
-            <h1 class="text-4xl font-bold text-gray-900 leading-tight">Evolution</h1>
+            <h1 class="text-4xl font-bold text-gray-900 leading-tight">Commit</h1>
             
         </div>
     </div>
 
     <!-- Right Content Area -->
     <div class="pt-4">
-        <div class="space-y-6 text-2xl text-gray-700 leading-relaxed">
+        <div class="w-full ">
             
-            <p>1920 Physical cut-up method with scissors</p>
-            
-            <p>1995 Verbasizer 2.0 digital randomization</p>
-            
-            <p>2019 AI Dungeon interactive text generation</p>
-            
-            <p>2022 ChatGPT browser-based prompting</p>
-            
-            <p>2024 Tools/MCP servers provide filesystem access</p>
-            
-            <p>2025 Agentic coding assistants with full workflow automation</p>
+            <div class="bg-gray-100 border border-gray-200 rounded-2xl p-8">
+                <pre class="leading-relaxed text-gray-800"><code>clg() {
+    unset ANTHROPIC_API_KEY
+    claude -p -c "Your task is to commit and push ONLY the uncommitted changes in this git repository.
+
+CRITICAL: You do NOT have access to previous commits in your history. Some changes may already
+be committed. You must ONLY work with the uncommitted changes shown by 'git status' and 'git diff'.
+
+WORKFLOW:
+1. Run 'git status' to see what files are currently uncommitted (modified/added/deleted)
+2. Run 'git diff' to review the actual uncommitted changes
+3. Stage these uncommitted changes with 'git add'
+4. Create a commit with a single-line descriptive message based ONLY on the uncommitted changes
+5. Push the changes with 'git push'
+
+DO NOT reference or include already-committed changes in your commit message.
+DO NOT reference the current branch or issue number in the commit message
+
+After successfully completing all steps, output a brief success message and exit immediately.
+Do not wait for further instructions or ask any questions.
+
+IMPORTANT TOOL RESTRICTIONS:
+- You are ONLY allowed to use these tools:
+  * Bash(git status:*) - to check repository status
+  * Bash(git diff:*) - to view changes
+  * Bash(git add:*) - to stage files
+  * Bash(git commit:*) - to commit changes
+  * Bash(git push:*) - to push changes
+- You are NOT allowed to use any other tools including Read, Write, Edit, Grep, Glob, or any other Bash commands
+- Stay focused on the git workflow only" \
+    --allowedTools "Bash(git status:*)" "Bash(git diff:*)" "Bash(git add:*)" "Bash(git commit:*)" "Bash(git push:*)"
+}</code></pre>
+            </div>
             
         </div>
     </div>
