@@ -35,10 +35,10 @@ def org_body_to_html(body):
     # Autolink URLs
     html = autolink_urls(html)
 
-    # Wrap code blocks in styled divs
+    # Wrap code blocks in styled divs (match <pre> with or without attributes)
     html = re.sub(
-        r'<pre>(.*?)</pre>',
-        r'<div class="bg-gray-100 border border-gray-200 rounded-2xl p-8"><pre class="leading-relaxed text-gray-800">\1</pre></div>',
+        r'<pre[^>]*>(.*?)</pre>',
+        r'<div class="bg-gray-100 border border-gray-200 rounded-2xl p-6"><pre class="leading-relaxed text-gray-800">\1</pre></div>',
         html,
         flags=re.DOTALL
     )
@@ -46,7 +46,7 @@ def org_body_to_html(body):
     # Wrap tables in styled divs
     html = re.sub(
         r'<table>(.*?)</table>',
-        r'<div class="bg-gray-100 border border-gray-200 rounded-2xl p-8"><table class="w-full text-lg">\1</table></div>',
+        r'<div class="bg-gray-100 border border-gray-200 rounded-2xl p-6"><table class="w-full text-lg">\1</table></div>',
         html,
         flags=re.DOTALL
     )

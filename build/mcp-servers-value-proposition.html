@@ -76,10 +76,10 @@
     <!-- Right Content Area -->
     <div class="pt-4">
         <div class="space-y-6 text-2xl text-gray-700 leading-relaxed">
-            <pre class="src src-bash">
+            <div class="bg-gray-100 border border-gray-200 rounded-2xl p-6"><pre class="leading-relaxed text-gray-800">
 $ pip install mcp[cli]
-</pre>
-<pre class="src src-python">
+</pre></div>
+<div class="bg-gray-100 border border-gray-200 rounded-2xl p-6"><pre class="leading-relaxed text-gray-800">
 from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("Multiply Server")
@@ -97,7 +97,7 @@ def multiply(a: float, b: float) -> str:
 
 if __name__ == "__main__":
     mcp.run()
-</pre>
+</pre></div>
         </div>
     </div>
 </div>

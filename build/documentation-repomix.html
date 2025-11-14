@@ -76,7 +76,7 @@
     <!-- Right Content Area -->
     <div class="pt-4">
         <div class="space-y-6 text-2xl text-gray-700 leading-relaxed">
-            <pre class="src src-bash">
+            <div class="bg-gray-100 border border-gray-200 rounded-2xl p-6"><pre class="leading-relaxed text-gray-800">
 # Generate with repomix
 for app in src/apps/*; do
   appname=$(basename $app)
@@ -86,7 +86,7 @@ for app in src/apps/*; do
     instructions in @llm/how_to_document_an_app.md and \
     generate llm/$appname.md"
 done
-</pre>
+</pre></div>
         </div>
     </div>
 </div>

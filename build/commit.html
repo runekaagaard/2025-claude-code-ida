@@ -74,7 +74,7 @@
     <!-- Right Content Area -->
     <div class="pt-4">
         <div class="space-y-6 text-2xl text-gray-700 leading-relaxed">
-            <pre class="src src-bash">
+            <div class="bg-gray-100 border border-gray-200 rounded-2xl p-6"><pre class="leading-relaxed text-gray-800">
 clg() {
     unset ANTHROPIC_API_KEY
     claude -p -c "Your task is to commit and push ONLY the uncommitted changes in this git repository.
@@ -106,7 +106,7 @@ IMPORTANT TOOL RESTRICTIONS:
 - Stay focused on the git workflow only" \
     --allowedTools "Bash(git status:*)" "Bash(git diff:*)" "Bash(git add:*)" "Bash(git commit:*)" "Bash(git push:*)"
 }
-</pre>
+</pre></div>
         </div>
     </div>
 </div>

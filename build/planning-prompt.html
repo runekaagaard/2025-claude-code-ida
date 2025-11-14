@@ -76,7 +76,7 @@
     <!-- Right Content Area -->
     <div class="pt-4">
         <div class="space-y-6 text-2xl text-gray-700 leading-relaxed">
-            <pre class="src src-markdown">
+            <div class="bg-gray-100 border border-gray-200 rounded-2xl p-6"><pre class="leading-relaxed text-gray-800">
 Today we are replacing the old rate limiter with Redis HyperLogLog counting. I'm thinking we use this overall approach:
 
 - Use PFCOUNT for approximate unique IP counting per window
@@ -84,8 +84,8 @@ Today we are replacing the old rate limiter with Redis HyperLogLog counting. I'm
 - Celery task to persist stats every hour
 
 Any questions? Feel free to do additional research before we start coding.
-</pre>
-<pre class="src src-markdown">
+</pre></div>
+<div class="bg-gray-100 border border-gray-200 rounded-2xl p-6"><pre class="leading-relaxed text-gray-800">
 Great questions, I'm thinking the following:
 
 1. Yes, 1% error rate on HyperLogLog is fine for rate limiting
@@ -93,7 +93,7 @@ Great questions, I'm thinking the following:
 3. The Celery task just reads from Redis and writes to the DB
 
 Sounds good? Let's see the code.
-</pre>
+</pre></div>
         </div>
     </div>
 </div>
