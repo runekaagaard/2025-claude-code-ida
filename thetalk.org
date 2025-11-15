@@ -4,18 +4,6 @@
 :END:
 Making It Work on Large Projects
 
-* Evolution
-:PROPERTIES:
-:TEMPLATE: evolution
-:IMAGES: static/bowie-cutup.jpeg|Bowie's Cut-Up Method, 1973;static/verbasizer.png|"And then I'll set it to Randomize."|Verbasizer, 1995
-:END:
-- 1920 Physical cut-up method with scissors
-- 1995 Verbasizer 2.0 digital randomization
-- 2019 AI Dungeon interactive text generation
-- 2022 ChatGPT browser-based prompting
-- 2024 Tools/MCP servers provide filesystem access
-- 2025 Agentic coding assistants with full workflow automation
-
 * About
 ** Rune Kaagaard
 :PROPERTIES:
@@ -31,9 +19,9 @@ Making It Work on Large Projects
 :END:
 - https://github.com/runekaagaard
 - https://github.com/runekaagaard/mcp-alchemy - Relational Databases
-- https://github.com/runekaagaard/mcp-redmine) - Redmine Project Management
+- https://github.com/runekaagaard/mcp-redmine - Redmine Project Management
 - https://github.com/runekaagaard/mcp-notmuch-sendmail - Send/Receive Email
-- hypergen.it - Django Liveview
+- https://hypergen.it - Django Liveview
 
 ** Talk
 :PROPERTIES:
@@ -42,6 +30,19 @@ Making It Work on Large Projects
 - MCP servers: Your tools become Claude's tools
 - Worktrees and workflows for parallel development
 - Root to leaves: Foundation first, details last
+
+* Evolution
+:PROPERTIES:
+:TEMPLATE: evolution
+:IMAGES: static/bowie-cutup.jpeg|Bowie's Cut-Up Method, 1973;static/verbasizer.png|"And then I'll set it to Randomize."|Verbasizer, 1995
+:END:
+- 1920 Physical cut-up method with scissors
+- 1995 Verbasizer 2.0 digital randomization
+- 2019 AI Dungeon interactive text generation
+- 2022 ChatGPT browser-based prompting
+- 2024 Tools/MCP servers provide filesystem access
+- 2025 Agentic coding assistants with full workflow automation
+
 
 * Getting Started
 :PROPERTIES:
@@ -182,6 +183,25 @@ if __name__ == "__main__":
 |            |                    |                       | download       |
 
 * Documentation
+** Overview
+#+begin_src bash
+tree .claude llm CLAUDE.md
+.claude
+├── commands
+│   ├── issue.md
+│   └── review.md
+├── settings.json
+└── skills
+    └── example-skill
+        └── SKILL.md
+llm
+├── app1.md
+├── app2.md
+├── base.md
+└── features.md
+CLAUDE.md
+#+end_src
+
 ** CLAUDE.md
 :PROPERTIES:
 :END:
@@ -211,7 +231,7 @@ for app in src/apps/*; do
 done
 #+end_src
 
-** Cross Cutting
+** Cross Cutting Concerns
 #+begin_src markdown
 Dear Claude:
 

@@ -76,9 +76,9 @@
     <!-- Left Sidebar: Title & Images -->
     <div class="pt-4 space-y-6">
         <div class="space-y-3">
-            <h1 class="text-4xl font-bold text-gray-700 leading-tight">Build Root</h1>
+            <h1 class="text-4xl font-bold text-gray-700 leading-tight">Documentation</h1>
             
-            <h2 class="text-xl text-gray-500 font-medium">Prompt</h2>
+            <h2 class="text-xl text-gray-500 font-medium">Overview</h2>
             
         </div>
 
@@ -88,22 +88,21 @@
     <!-- Right Content Area -->
     <div class="pt-4">
         <div class="slide-content space-y-6 text-3xl leading-relaxed">
-            <pre><code class="language-markdown">Let's build the core foundation. We'll work in these files:
-- src/ratelimit/counter.py
-- src/models/rate_window.py
-
-Please create a function
-
-def check_rate_limit(key: str, limit: int, window_seconds: int) -> bool
-
-that uses Redis PFADD and PFCOUNT for approximate counting.
-
-Uh, and we'll need datastructures as well. Please suggest better names, labels and help texts for these before coding the solution.
-
-RateWindow:
-   redis_key - str
-   count - int (approximate)
-   started_at - datetime</code></pre>
+            <pre><code class="language-bash">tree .claude llm CLAUDE.md
+.claude
+├── commands
+│   ├── issue.md
+│   └── review.md
+├── settings.json
+└── skills
+    └── example-skill
+        └── SKILL.md
+llm
+├── app1.md
+├── app2.md
+├── base.md
+└── features.md
+CLAUDE.md</code></pre>
         </div>
     </div>
 </div>

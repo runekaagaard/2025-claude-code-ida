@@ -76,9 +76,9 @@
     <!-- Left Sidebar: Title & Images -->
     <div class="pt-4 space-y-6">
         <div class="space-y-3">
-            <h1 class="text-4xl font-bold text-gray-700 leading-tight">Build Root</h1>
+            <h1 class="text-4xl font-bold text-gray-700 leading-tight">Documentation</h1>
             
-            <h2 class="text-xl text-gray-500 font-medium">Prompt</h2>
+            <h2 class="text-xl text-gray-500 font-medium">Cross Cutting Concerns</h2>
             
         </div>
 
@@ -88,22 +88,10 @@
     <!-- Right Content Area -->
     <div class="pt-4">
         <div class="slide-content space-y-6 text-3xl leading-relaxed">
-            <pre><code class="language-markdown">Let's build the core foundation. We'll work in these files:
-- src/ratelimit/counter.py
-- src/models/rate_window.py
+            <pre><code class="language-markdown">Dear Claude:
 
-Please create a function
-
-def check_rate_limit(key: str, limit: int, window_seconds: int) -> bool
-
-that uses Redis PFADD and PFCOUNT for approximate counting.
-
-Uh, and we'll need datastructures as well. Please suggest better names, labels and help texts for these before coding the solution.
-
-RateWindow:
-   redis_key - str
-   count - int (approximate)
-   started_at - datetime</code></pre>
+- please read all the app documentation files in @llm/ and research cross-cutting concerns
+- update each llm/[app].md file with these details</code></pre>
         </div>
     </div>
 </div>

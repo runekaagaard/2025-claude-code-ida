@@ -16,7 +16,7 @@ A presentation about using Claude Code on large projects - building features fas
 
 ## About
 
-Created by Rune Kaagaard (CTO, Prescriba) for the Copenhagen Python meetup.
+Created by Rune Kaagaard (CTO, Prescriba) for the IDA event: [MCP in Practice: Building, Using and Securing the Model Context Protocol](https://english.ida.dk/event/mcp-in-practice-building-using-and-securing-the-model-context-protocol-363540).
 
 Topics include practical workflows, MCP server development, documentation strategies, and real-world patterns for using Claude Code effectively on large codebases.
 

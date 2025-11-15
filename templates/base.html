@@ -16,6 +16,18 @@
 
 <!-- Navigation -->
 <nav id="slide-nav"></nav>
+
+<!-- Index Popover -->
+<div id="index-popover" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; padding: 3vh 3vw; overflow-y: auto;">
+    <div style="background: white; border-radius: 0.5rem; padding: 1rem; max-width: 1200px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2 style="font-size: 1.25rem; font-weight: bold; color: #374151;">All Slides</h2>
+            <button id="close-index" style="font-size: 1.5rem; color: #9ca3af; cursor: pointer; border: none; background: none; padding: 0;">&times;</button>
+        </div>
+        <div id="index-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;"></div>
+    </div>
+</div>
+
 <script>
     const slides = {{ all_slides|tojson }};
     const currentPage = location.pathname.split('/').pop();
@@ -28,9 +40,34 @@
 
         nav.innerHTML = `
             ${prevLink}
-            <a href="index.html">Index</a>
+            <a href="#" id="index-link">Index</a>
             ${nextLink}
         `;
+
+        // Index popover
+        document.getElementById('index-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            const grid = document.getElementById('index-grid');
+            grid.innerHTML = slides.map((slide, i) => {
+                const title = slide.replace('.html', '').replace(/-/g, ' ');
+                const isCurrent = i === idx;
+                return `<a href="${slide}" style="display: block; padding: 0.5rem; border: 1px solid ${isCurrent ? '#D97757' : '#e5e7eb'}; border-radius: 0.25rem; text-decoration: none; background: ${isCurrent ? '#fff5f2' : 'white'};">
+                    <div style="font-weight: bold; color: #D97757; font-size: 0.875rem; margin-bottom: 0.125rem;">${i + 1}</div>
+                    <div style="font-size: 0.75rem; color: #6b7280; text-transform: capitalize; line-height: 1.2;">${title}</div>
+                </a>`;
+            }).join('');
+            document.getElementById('index-popover').style.display = 'block';
+        });
+
+        document.getElementById('close-index').addEventListener('click', function() {
+            document.getElementById('index-popover').style.display = 'none';
+        });
+
+        document.getElementById('index-popover').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
     }
 </script>
 
