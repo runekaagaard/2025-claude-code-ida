@@ -36,7 +36,18 @@ def org_body_to_html(body):
     def wrap_code(match):
         attrs = match.group(1)
         content = match.group(2).strip()
-        return f'<pre{attrs}><code>{content}</code></pre>'
+
+        # Extract language from class="src src-bash" and convert to language-bash
+        lang_match = re.search(r'src-(\w+)', attrs)
+        if lang_match:
+            lang = lang_match.group(1)
+            code_class = f' class="language-{lang}"'
+            # Remove src classes from pre, keep other attributes
+            attrs = re.sub(r'\s*class="[^"]*src[^"]*"', '', attrs)
+        else:
+            code_class = ''
+
+        return f'<pre{attrs}><code{code_class}>{content}</code></pre>'
 
     html = re.sub(
         r'<pre([^>]*)>(.*?)</pre>',

@@ -51,14 +51,14 @@
     <!-- Right Content Area -->
     <div class="pt-4">
         <div class="slide-content space-y-6 text-3xl leading-relaxed">
-            <pre class="src src-markdown"><code>Today we are replacing the old rate limiter with Redis HyperLogLog counting. I'm thinking we use this overall approach:
+            <pre><code class="language-markdown">Today we are replacing the old rate limiter with Redis HyperLogLog counting. I'm thinking we use this overall approach:
 
 - Use PFCOUNT for approximate unique IP counting per window
 - Store window metadata in Django models
 - Celery task to persist stats every hour
 
 Any questions? Feel free to do additional research before we start coding.</code></pre>
-<pre class="src src-markdown"><code>Great questions, I'm thinking the following:
+<pre><code class="language-markdown">Great questions, I'm thinking the following:
 
 1. Yes, 1% error rate on HyperLogLog is fine for rate limiting
 2. Keep the last 24 hours of windows in the database

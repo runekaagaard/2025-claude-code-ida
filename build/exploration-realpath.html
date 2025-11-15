@@ -51,9 +51,9 @@
     <!-- Right Content Area -->
     <div class="pt-4">
         <div class="slide-content space-y-6 text-3xl leading-relaxed">
-            <pre class="src src-bash"><code># Get absolute paths for files
+            <pre><code class="language-bash"># Get absolute paths for files
 $ realpath [file1] [file2]</code></pre>
-<pre class="src src-elisp"><code>(defun rk-realpath ()
+<pre><code class="language-elisp">(defun rk-realpath ()
   "Copy the full path of current buffer to kill ring"
   (interactive)
   (kill-new (buffer-file-name))
