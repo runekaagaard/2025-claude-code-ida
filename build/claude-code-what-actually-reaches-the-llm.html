@@ -76,9 +76,9 @@
     <!-- Left Sidebar: Title & Images -->
     <div class="pt-4 space-y-6">
         <div class="space-y-3">
-            <h1 class="text-4xl font-bold text-gray-700 leading-tight">Build Leaves</h1>
+            <h1 class="text-4xl font-bold text-gray-700 leading-tight">Claude Code</h1>
             
-            <h2 class="text-xl text-gray-500 font-medium">Feel</h2>
+            <h2 class="text-xl text-gray-500 font-medium">What Actually Reaches the LLM</h2>
             
         </div>
 
@@ -88,33 +88,121 @@
     <!-- Right Content Area -->
     <div class="pt-4">
         <div class="slide-content space-y-6 text-3xl leading-relaxed">
-            <ul>
-<li>
-<p>
-I&#39;m delegating the details
-</p>
-</li>
-<li>
-<p>
-Reaping the benefits of our structured approach
-</p>
-</li>
-<li>
-<p>
-I trust the output will be sensible
-</p>
-</li>
-<li>
-<p>
-This is what LLMs are great at
-</p>
-</li>
-<li>
-<p>
-The context is great so the rice grains falls in all the right places
-</p>
-</li>
-</ul>
+            <pre><code class="language-xml">&lt;!-- API Request: JSON → XML → Tokenizer → H100 GPUs --&gt;
+&lt;!-- ~307KB, 33,606 tokens, 80.9% cached, $0.137/request --&gt;
+
+&lt;system cache_control=&quot;ephemeral&quot;&gt;
+You are Claude Code, Anthropic&#x27;s official CLI for Claude.
+
+# Tone and style
+- Your responses should be short and concise
+- Output will be displayed on a command line interface
+
+[...instructions ~12KB total...]
+&lt;/system&gt;
+
+&lt;system cache_control=&quot;ephemeral&quot;&gt;
+&lt;env&gt;
+Working directory: /home/user/projects/webapp
+Platform: linux
+Today&#x27;s date: 2025-11-15
+&lt;/env&gt;
+
+gitStatus: Current branch: feature/auth-improvements
+Status: M src/auth/password.py
+
+&lt;tools&gt;
+&lt;!-- 41 built-in tools --&gt;
+&lt;tool name=&quot;Bash&quot;&gt;&lt;description&gt;Execute shell commands&lt;/description&gt;&lt;/tool&gt;
+&lt;tool name=&quot;Read&quot;&gt;&lt;description&gt;Read files, images, PDFs&lt;/description&gt;&lt;/tool&gt;
+&lt;tool name=&quot;Edit&quot;&gt;&lt;description&gt;Exact string replacements&lt;/description&gt;&lt;/tool&gt;
+&lt;tool name=&quot;Write&quot;&gt;&lt;description&gt;Write or overwrite files&lt;/description&gt;&lt;/tool&gt;
+&lt;tool name=&quot;Grep&quot;&gt;&lt;description&gt;Search code with ripgrep&lt;/description&gt;&lt;/tool&gt;
+&lt;tool name=&quot;Glob&quot;&gt;&lt;description&gt;Find files by pattern&lt;/description&gt;&lt;/tool&gt;
+&lt;tool name=&quot;Task&quot;&gt;&lt;description&gt;Launch specialized agents&lt;/description&gt;&lt;/tool&gt;
+&lt;!-- ... 34 more tools ... --&gt;
+
+&lt;!-- 14 MCP server tools --&gt;
+&lt;tool name=&quot;mcp__db_mysql__execute_query&quot;&gt;
+  &lt;description&gt;Execute SQL query with param substitution&lt;/description&gt;
+&lt;/tool&gt;
+&lt;tool name=&quot;mcp__email__compose_new_email&quot;&gt;
+  &lt;description&gt;Compose email from markdown&lt;/description&gt;
+&lt;/tool&gt;
+&lt;!-- ... 12 more MCP tools ... --&gt;
+&lt;/tools&gt;
+&lt;/system&gt;
+
+&lt;conversation&gt;
+&lt;message role=&quot;user&quot;&gt;
+&lt;system-reminder&gt;
+Contents of /home/user/projects/webapp/CLAUDE.md:
+# Project Instructions
+- Django + PostgreSQL web application
+- Use bcrypt for password hashing (cost factor 12)
+- Rate limiting: 5 requests/min per IP
+[...6,000+ lines of documentation...]
+&lt;/system-reminder&gt;
+
+&lt;image&gt;
+  &lt;source type=&quot;base64&quot; media_type=&quot;image/png&quot;&gt;
+    iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==
+  &lt;/source&gt;
+&lt;/image&gt;
+
+I&#x27;m seeing this error in my browser. Can you fix the password hashing
+vulnerability in src/auth/password.py that&#x27;s causing it?
+&lt;/message&gt;
+
+&lt;message role=&quot;assistant&quot;&gt;
+&lt;thinking budget=&quot;31,999 tokens&quot;&gt;
+The user wants me to fix a password hashing vulnerability.
+I should:
+1. Read the auth/password.py file to understand current implementation
+2. Identify the vulnerability (likely weak hashing or no salt)
+3. Implement proper bcrypt hashing with appropriate cost factor
+4. Update any related tests
+&lt;/thinking&gt;
+
+&lt;tool_use name=&quot;Read&quot;&gt;
+&lt;parameters&gt;
+&lt;file_path&gt;/home/user/projects/webapp/src/auth/password.py&lt;/file_path&gt;
+&lt;/parameters&gt;
+&lt;/tool_use&gt;
+&lt;/message&gt;
+
+&lt;message role=&quot;function_result&quot;&gt;
+&lt;result&gt;
+import hashlib
+
+def hash_password(password: str) -&gt; str:
+    # VULNERABILITY: Using MD5 without salt
+    return hashlib.md5(password.encode()).hexdigest()
+&lt;/result&gt;
+&lt;/message&gt;
+
+&lt;message role=&quot;assistant&quot;&gt;
+I found the vulnerability - the code is using MD5 hashing without salt,
+which is completely insecure. I&#x27;ll replace this with bcrypt.
+
+&lt;tool_use name=&quot;Edit&quot;&gt;
+&lt;parameters&gt;
+&lt;file_path&gt;/home/user/projects/webapp/src/auth/password.py&lt;/file_path&gt;
+&lt;old_string&gt;import hashlib
+
+def hash_password(password: str) -&gt; str:
+    # VULNERABILITY: Using MD5 without salt
+    return hashlib.md5(password.encode()).hexdigest()&lt;/old_string&gt;
+&lt;new_string&gt;import bcrypt
+
+def hash_password(password: str) -&gt; str:
+    &quot;&quot;&quot;Hash password using bcrypt with cost factor 12&quot;&quot;&quot;
+    salt = bcrypt.gensalt(rounds=12)
+    return bcrypt.hashpw(password.encode(), salt).decode()&lt;/new_string&gt;
+&lt;/parameters&gt;
+&lt;/tool_use&gt;
+&lt;/message&gt;
+&lt;/conversation&gt;</code></pre>
         </div>
     </div>
 </div>

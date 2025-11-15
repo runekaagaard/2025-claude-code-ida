@@ -34,8 +34,12 @@ def org_body_to_html(body):
 
     # Wrap pre contents with code tags for highlight.js
     def wrap_code(match):
+        import html
         attrs = match.group(1)
         content = match.group(2).strip()
+
+        # HTML escape the content to prevent XML/HTML tags from being interpreted
+        content = html.escape(content)
 
         # Extract language from class="src src-bash" and convert to language-bash
         lang_match = re.search(r'src-(\w+)', attrs)

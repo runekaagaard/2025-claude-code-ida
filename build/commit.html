@@ -29,7 +29,7 @@
 </div>
 
 <script>
-    const slides = ["claude-code-in-practice.html", "about-rune-kaagaard.html", "about-github.html", "about-talk.html", "evolution.html", "getting-started.html", "claude-code.html", "claude-code-batteries.html", "mcp-servers.html", "mcp-servers-value-proposition.html", "mcp-servers-config.html", "mcp-servers-good-server.html", "mcp-servers-strategies.html", "documentation-overview.html", "documentation-claudemd.html", "documentation-llm.html", "documentation-repomix.html", "documentation-cross-cutting-concerns.html", "dev-setup.html", "dev-setup-worktrees.html", "dev-setup-create-worktree.html", "dev-setup-workspace-creation.html", "start-building.html", "start-building-issue-command.html", "exploration.html", "exploration-prompt.html", "exploration-realpath.html", "planning.html", "planning-prompt.html", "build-root.html", "build-root-prompt.html", "build-root-feel.html", "build-leaves.html", "build-leaves-prompt.html", "build-leaves-feel.html", "commit.html", "cleanup.html", "cleanup-prompt.html", "cleanup-feel.html", "get-feedback.html", "ship-it.html"];
+    const slides = ["claude-code-in-practice.html", "about-rune-kaagaard.html", "about-github.html", "about-talk.html", "evolution.html", "getting-started.html", "claude-code.html", "claude-code-batteries.html", "claude-code-what-actually-reaches-the-llm.html", "mcp-servers.html", "mcp-servers-value-proposition.html", "mcp-servers-config.html", "mcp-servers-good-server.html", "mcp-servers-strategies.html", "documentation-overview.html", "documentation-claudemd.html", "documentation-llm.html", "documentation-repomix.html", "documentation-cross-cutting-concerns.html", "dev-setup.html", "dev-setup-worktrees.html", "dev-setup-create-worktree.html", "dev-setup-workspace-creation.html", "start-building.html", "start-building-issue-command.html", "exploration.html", "exploration-prompt.html", "exploration-realpath.html", "planning.html", "planning-prompt.html", "build-root.html", "build-root-prompt.html", "build-root-feel.html", "build-leaves.html", "build-leaves-prompt.html", "build-leaves-feel.html", "commit.html", "cleanup.html", "cleanup-prompt.html", "cleanup-feel.html", "get-feedback.html", "ship-it.html"];
     const currentPage = location.pathname.split('/').pop();
     const idx = slides.indexOf(currentPage);
 
@@ -88,17 +88,17 @@
         <div class="slide-content space-y-6 text-3xl leading-relaxed">
             <pre><code class="language-bash">clg() {
     unset ANTHROPIC_API_KEY
-    claude -p -c "Your task is to commit and push ONLY the uncommitted changes in this git repository.
+    claude -p -c &quot;Your task is to commit and push ONLY the uncommitted changes in this git repository.
 
 CRITICAL: You do NOT have access to previous commits in your history. Some changes may already
-be committed. You must ONLY work with the uncommitted changes shown by 'git status' and 'git diff'.
+be committed. You must ONLY work with the uncommitted changes shown by &#x27;git status&#x27; and &#x27;git diff&#x27;.
 
 WORKFLOW:
-1. Run 'git status' to see what files are currently uncommitted (modified/added/deleted)
-2. Run 'git diff' to review the actual uncommitted changes
-3. Stage these uncommitted changes with 'git add'
+1. Run &#x27;git status&#x27; to see what files are currently uncommitted (modified/added/deleted)
+2. Run &#x27;git diff&#x27; to review the actual uncommitted changes
+3. Stage these uncommitted changes with &#x27;git add&#x27;
 4. Create a commit with a single-line descriptive message based ONLY on the uncommitted changes
-5. Push the changes with 'git push'
+5. Push the changes with &#x27;git push&#x27;
 
 DO NOT reference or include already-committed changes in your commit message.
 DO NOT reference the current branch or issue number in the commit message
@@ -114,8 +114,8 @@ IMPORTANT TOOL RESTRICTIONS:
   * Bash(git commit:*) - to commit changes
   * Bash(git push:*) - to push changes
 - You are NOT allowed to use any other tools including Read, Write, Edit, Grep, Glob, or any other Bash commands
-- Stay focused on the git workflow only" \
-    --allowedTools "Bash(git status:*)" "Bash(git diff:*)" "Bash(git add:*)" "Bash(git commit:*)" "Bash(git push:*)"
+- Stay focused on the git workflow only&quot; \
+    --allowedTools &quot;Bash(git status:*)&quot; &quot;Bash(git diff:*)&quot; &quot;Bash(git add:*)&quot; &quot;Bash(git commit:*)&quot; &quot;Bash(git push:*)&quot;
 }</code></pre>
         </div>
     </div>
