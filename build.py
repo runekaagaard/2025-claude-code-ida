@@ -34,7 +34,7 @@ def org_body_to_html(body):
 
     return html
 
-def parse_grid_items(body):
+def parse_grid(body):
     """Parse grid items (format: - Name: Description)"""
 
     items = []
@@ -75,12 +75,9 @@ def parse_images_property(images_prop):
 
     return images
 
-def convert_timeline_to_html(body):
-    """Convert org bullets with years to timeline HTML"""
-    if not body:
-        return ""
-
-    html_parts = []
+def parse_evolution(body):
+    """Parse evolution timeline bullets into structured data"""
+    items = []
     for line in body.strip().split('\n'):
         line = line.strip()
         if line.startswith('- '):
@@ -89,83 +86,52 @@ def convert_timeline_to_html(body):
             match = re.match(r'^(\d{4}s?)\s+(.+)$', content)
             if match:
                 year, text = match.groups()
-                html_parts.append(f'<div class="timeline-item">'
-                                  f'<span class="timeline-year">{year}</span>'
-                                  f'<p>{text}</p>'
-                                  f'</div>')
+                items.append({'year': year, 'text': text})
             else:
-                html_parts.append(f'<p>{content}</p>')
+                items.append({'text': content})
+    return items
 
-    return '\n'.join(html_parts)
+def process_node(node, parent_title=None):
+    """Process a single org node and return slide data if it has body"""
+    # Skip nodes without body
+    if not node.body or not node.body.strip():
+        return None
 
-def process_node(node, parent_slug='', is_first_child=False):
-    """Process a single org node and return slide data"""
     heading = node.heading.strip()
-
-    # Handle title slides
-    if '[CLAUDE:' in heading and 'title' in heading.lower():
-        if node.body:
-            body_lines = [line.strip() for line in node.body.strip().split('\n') if line.strip()]
-            if body_lines:
-                return [{
-                    'title': body_lines[0],
-                    'subtitle': body_lines[1] if len(body_lines) > 1 else None,
-                    'template': 'title',
-                    'filename': slugify(body_lines[0]) + '.html',
-                }]
-        return []
-
-    clean_heading = re.sub(r'\[CLAUDE:.*?\]', '', heading).strip()
-    section_slug = slugify(clean_heading)
-    has_body = bool(node.body and node.body.strip())
-
-    # Get template and images from properties
     template = node.properties.get('TEMPLATE', '').lower() if node.properties else ''
-    images_prop = node.properties.get('IMAGES', '') if node.properties else ''
-    images = parse_images_property(images_prop)
 
-    # Determine filename
-    if parent_slug and is_first_child and not has_body:
-        filename = f"{parent_slug}.html"
-    elif parent_slug:
-        filename = f"{parent_slug}-{section_slug}.html"
-    else:
-        filename = f"{section_slug}.html"
+    # Build slide data
+    title = parent_title if parent_title else heading
+    subtitle = heading if parent_title else None
+    filename = slugify(f"{parent_title}-{heading}" if parent_title else heading) + '.html'
 
-    # Common slide data
     slide_data = {
-        'title': clean_heading if node.level == 1 else parent_slug.replace('-', ' ').title(),
-        'subtitle': clean_heading if node.level == 2 else None,
-        'images': images,
+        'title': title,
+        'subtitle': subtitle,
+        'images': parse_images_property(node.properties.get('IMAGES', '') if node.properties else ''),
         'filename': filename,
     }
 
     # Process based on template type
     if template == 'title':
-        # Title template with code or content
         slide_data['html_content'] = org_body_to_html(node.body)
         slide_data['template'] = 'title'
         slide_data['images'] = []  # No images for title slides
 
     elif template == 'evolution':
-        # Evolution template with timeline
-        slide_data['html_content'] = convert_timeline_to_html(node.body)
+        slide_data['items'] = parse_evolution(node.body)
         slide_data['template'] = 'evolution'
 
     elif template == 'grid':
-        # Grid template for batteries-style layouts
-        slide_data['items'] = parse_grid_items(node.body)
+        slide_data['items'] = parse_grid(node.body)
         slide_data['template'] = 'grid'
 
-    elif has_body:
-        # Default template for most slides
+    else:
+        # Default template
         slide_data['html_content'] = org_body_to_html(node.body)
         slide_data['template'] = 'default'
 
-    else:
-        return []
-
-    return [slide_data]
+    return slide_data
 
 def parse_org_file(org_path):
     """Parse org file and extract slides"""
@@ -175,16 +141,16 @@ def parse_org_file(org_path):
     for node in root[1:]:
         if node.level == 1:
             # Process level 1 node
-            slides.extend(process_node(node))
+            slide = process_node(node)
+            if slide:
+                slides.append(slide)
 
-            # Process subsections (level 2)
-            if node.children:
-                parent_slug = slugify(re.sub(r'\[CLAUDE:.*?\]', '', node.heading.strip()).strip())
-                is_first = True
-                for child in node.children:
-                    if child.level == 2:
-                        slides.extend(process_node(child, parent_slug, is_first))
-                        is_first = False
+            # Process level 2 children
+            for child in node.children:
+                if child.level == 2:
+                    slide = process_node(child, parent_title=node.heading.strip())
+                    if slide:
+                        slides.append(slide)
 
     return slides
 

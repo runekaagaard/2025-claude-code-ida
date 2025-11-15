@@ -1,6 +1,6 @@
 # Claude Code in Practice - Presentation
 
-Programmatic slide generation from org-mode source.
+Programmatic slide generation from org-mode source. Vibe code with Claude Code ;)
 
 ## Quick Start
 

@@ -27,7 +27,16 @@
     <!-- Right Content Area: Timeline -->
     <div class="pt-4">
         <div class="slide-content space-y-4 text-2xl text-gray-700">
-            {{ html_content|safe }}
+            {% for item in items %}
+                {% if item.year %}
+                <div class="timeline-item">
+                    <span class="timeline-year">{{ item.year }}</span>
+                    <p>{{ item.text }}</p>
+                </div>
+                {% else %}
+                <p>{{ item.text }}</p>
+                {% endif %}
+            {% endfor %}
         </div>
     </div>
 </div>
