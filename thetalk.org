@@ -224,6 +224,15 @@ Position │ Token Type │ Embedding (768-d vector, showing first 8 dims)
 33605    │ text       │ [ 0.778, -0.334,  0.556, -0.889,  0.234, -0.667,  0.123, -0.445]
 #+end_src
 
+* Demo Time
+:PROPERTIES:
+:TEMPLATE: title
+:TITLE_HIDE: true
+:END:
+#+begin_src bash
+demo time ...
+#+end_src
+
 * MCP Servers
 :PROPERTIES:
 :END:
