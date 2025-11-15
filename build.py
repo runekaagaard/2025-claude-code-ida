@@ -19,10 +19,10 @@ def slugify(text):
 def autolink_urls(html):
     """Convert plain URLs to <a> tags"""
     url_pattern = r'(?<!href=")(?<!src=")(https?://[^\s<]+)'
-    return re.sub(url_pattern, r'<a href="\1" class="text-claude-orange hover:underline">\1</a>', html)
+    return re.sub(url_pattern, r'<a href="\1">\1</a>', html)
 
 def org_body_to_html(body):
-    """Convert org-mode body to styled HTML"""
+    """Convert org-mode body to clean semantic HTML"""
     if not body:
         return ""
 
@@ -32,34 +32,10 @@ def org_body_to_html(body):
     # Autolink URLs
     html = autolink_urls(html)
 
-    # Wrap code blocks in styled divs (match <pre> with or without attributes)
-    html = re.sub(
-        r'<pre[^>]*>(.*?)</pre>',
-        r'<div class="bg-gray-100 border border-gray-200 rounded-2xl p-6"><pre class="leading-relaxed text-gray-800">\1</pre></div>',
-        html, flags=re.DOTALL)
-
-    # Wrap tables in styled divs
-    html = re.sub(
-        r'<table>(.*?)</table>',
-        r'<div class="bg-gray-100 border border-gray-200 rounded-2xl p-6"><table class="w-full text-lg">\1</table></div>',
-        html, flags=re.DOTALL)
-
-    # Add table styling
-    html = html.replace('<thead>', '<thead class="border-b-2 border-gray-300">')
-    html = html.replace('<tr>', '<tr class="border-b border-gray-200">')
-    html = html.replace('<th>', '<th class="text-left py-2 px-3">')
-    html = html.replace('<td>', '<td class="py-2 px-3 align-top">')
-
     return html
 
 def parse_grid_items(body):
     """Parse grid items (format: - Name: Description)"""
-    if not body:
-        return []
-
-    # Check if this looks like grid items (not URLs)
-    if 'http://' in body or 'https://' in body:
-        return []
 
     items = []
     for line in body.strip().split('\n'):
@@ -113,8 +89,8 @@ def convert_timeline_to_html(body):
             match = re.match(r'^(\d{4}s?)\s+(.+)$', content)
             if match:
                 year, text = match.groups()
-                html_parts.append(f'<div class="flex items-start gap-4">'
-                                  f'<span class="text-claude-orange font-bold min-w-[5rem]">{year}</span>'
+                html_parts.append(f'<div class="timeline-item">'
+                                  f'<span class="timeline-year">{year}</span>'
                                   f'<p>{text}</p>'
                                   f'</div>')
             else:
@@ -126,7 +102,7 @@ def process_node(node, parent_slug='', is_first_child=False):
     """Process a single org node and return slide data"""
     heading = node.heading.strip()
 
-    # Skip title slides (handled separately)
+    # Handle title slides
     if '[CLAUDE:' in heading and 'title' in heading.lower():
         if node.body:
             body_lines = [line.strip() for line in node.body.strip().split('\n') if line.strip()]
@@ -143,9 +119,10 @@ def process_node(node, parent_slug='', is_first_child=False):
     section_slug = slugify(clean_heading)
     has_body = bool(node.body and node.body.strip())
 
-    # Get template from properties
+    # Get template and images from properties
     template = node.properties.get('TEMPLATE', '').lower() if node.properties else ''
     images_prop = node.properties.get('IMAGES', '') if node.properties else ''
+    images = parse_images_property(images_prop)
 
     # Determine filename
     if parent_slug and is_first_child and not has_body:
@@ -155,62 +132,40 @@ def process_node(node, parent_slug='', is_first_child=False):
     else:
         filename = f"{section_slug}.html"
 
-    slides = []
+    # Common slide data
+    slide_data = {
+        'title': clean_heading if node.level == 1 else parent_slug.replace('-', ' ').title(),
+        'subtitle': clean_heading if node.level == 2 else None,
+        'images': images,
+        'filename': filename,
+    }
 
-    # Process based on template
-    if template == 'evolution':
-        images = parse_images_property(images_prop)
-        html_content = convert_timeline_to_html(node.body)
-        slides.append({
-            'title': clean_heading,
-            'images': images,
-            'html_content': html_content,
-            'template': 'evolution',
-            'filename': filename,
-        })
+    # Process based on template type
+    if template == 'title':
+        # Title template with code or content
+        slide_data['html_content'] = org_body_to_html(node.body)
+        slide_data['template'] = 'title'
+        slide_data['images'] = []  # No images for title slides
 
-    elif template == 'code_centered':
-        # Extract code block
-        code_match = re.search(r'#\+begin_src.*?\n(.*?)#\+end_src', node.body, re.DOTALL | re.IGNORECASE)
-        if code_match:
-            code = code_match.group(1).strip()
-            slides.append({
-                'code': code,
-                'template': 'code_centered',
-                'filename': filename,
-            })
+    elif template == 'evolution':
+        # Evolution template with timeline
+        slide_data['html_content'] = convert_timeline_to_html(node.body)
+        slide_data['template'] = 'evolution'
 
-    elif template == 'bullets':
-        html_content = org_body_to_html(node.body)
-        slides.append({
-            'title': clean_heading if node.level == 1 else parent_slug.replace('-', ' ').title(),
-            'subtitle': clean_heading if node.level == 2 else None,
-            'html_content': html_content,
-            'template': 'bullets',
-            'filename': filename,
-        })
-
-    elif template == 'batteries':
-        grid_items = parse_grid_items(node.body)
-        slides.append({
-            'title': clean_heading,
-            'items': grid_items,
-            'template': 'batteries',
-            'filename': filename,
-        })
+    elif template == 'grid':
+        # Grid template for batteries-style layouts
+        slide_data['items'] = parse_grid_items(node.body)
+        slide_data['template'] = 'grid'
 
     elif has_body:
-        # Default: content template
-        html_content = org_body_to_html(node.body)
-        slides.append({
-            'title': clean_heading if node.level == 1 else parent_slug.replace('-', ' ').title(),
-            'subtitle': clean_heading if node.level == 2 else None,
-            'html_content': html_content,
-            'template': 'content',
-            'filename': filename,
-        })
+        # Default template for most slides
+        slide_data['html_content'] = org_body_to_html(node.body)
+        slide_data['template'] = 'default'
 
-    return slides
+    else:
+        return []
+
+    return [slide_data]
 
 def parse_org_file(org_path):
     """Parse org file and extract slides"""

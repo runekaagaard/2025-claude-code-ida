@@ -1,13 +1,16 @@
-* [CLAUDE: Title type slide]
+* Claude Code in Practice
+:PROPERTIES:
+:TEMPLATE: title
+:END:
 Claude Code in Practice
 Making It Work on Large Projects
 
 * Evolution
 :PROPERTIES:
 :TEMPLATE: evolution
-:IMAGES: bowie-cutup.jpeg|Bowie's Cut-Up Method, 1973;verbasizer.png|"And then I'll set it to Randomize."|Verbasizer, 1995
+:IMAGES: static/bowie-cutup.jpeg|Bowie's Cut-Up Method, 1973;static/verbasizer.png|"And then I'll set it to Randomize."|Verbasizer, 1995
 :END:
-- 1920s Physical cut-up method with scissors
+- 1920 Physical cut-up method with scissors
 - 1995 Verbasizer 2.0 digital randomization
 - 2019 AI Dungeon interactive text generation
 - 2022 ChatGPT browser-based prompting
@@ -17,17 +20,15 @@ Making It Work on Large Projects
 * About
 ** Rune Kaagaard
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - CTO Prescriba
-- Psychological/Psychiatric services
+- Psychological & Psychiatric services
 - 50.000 Clients/year
 - Composer & Pianist
 - Dragør
 
 ** GitHub
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - https://github.com/runekaagaard
 - https://github.com/runekaagaard/mcp-alchemy - Relational Databases
@@ -37,7 +38,6 @@ Making It Work on Large Projects
 
 ** Talk
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - Building features fast without losing control
 - MCP servers: Your tools become Claude's tools
@@ -46,7 +46,7 @@ Making It Work on Large Projects
 
 * Getting Started
 :PROPERTIES:
-:TEMPLATE: code_centered
+:TEMPLATE: title
 :END:
 #+begin_src bash
 npm install -g @anthropic-ai/claude-code
@@ -55,7 +55,6 @@ claude
 
 * Claude Code
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - Agentic Code Editor
 - Command Line
@@ -66,7 +65,7 @@ claude
 
 ** Batteries
 :PROPERTIES:
-:TEMPLATE: batteries
+:TEMPLATE: grid
 :END:
 - Task: Launch specialized sub-agents for complex, multi-step autonomous work
 - Bash: Execute shell commands in persistent sessions for builds, tests, automation
@@ -87,7 +86,6 @@ claude
 
 * MCP Servers
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - Give Claude code access to all your stuff
 - Database, Browser Automation, Design tools, Messaging
@@ -159,7 +157,6 @@ if __name__ == "__main__":
 
 ** Good Server
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - As few tools as possible
 - Add discoverability to existing programs
@@ -187,7 +184,6 @@ if __name__ == "__main__":
 * Documentation
 ** CLAUDE.md
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - Project instructions that persists across sessions
 - Tech stack, modules, conventions, where to find things
@@ -195,7 +191,6 @@ if __name__ == "__main__":
 
 ** LLM
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - Full source too big for context
 - Document each app separately, then add cross cutting concerns
@@ -226,7 +221,6 @@ Dear Claude:
 
 * Dev Setup
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - What makes developers happy makes Claude effective
 - Fast dev environment creation
@@ -237,7 +231,6 @@ Dear Claude:
 
 ** Worktrees
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - Claude Code conversations are directory specific
 - Worktrees over branch switching
@@ -317,12 +310,12 @@ Please process these instructions: $ARGUMENTS
 
 * Exploration
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - Make Claude use a lot of tokens
 - Great way to refresh your own understanding
 - Follow up for additional details
 - Stepwise approach makes good todo items
+#+end_src
 
 ** Prompt
 #+begin_src markdown
@@ -375,7 +368,6 @@ $ realpath [file1] [file2]
 
 * Planning
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - What are we building?
 - How will we build it?
@@ -407,7 +399,6 @@ Sounds good? Let's see the code.
 
 * Build Root
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - Very precise language
 - Function names and definitions
@@ -436,7 +427,6 @@ RateWindow:
 
 ** Feel
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - I'm in control
 - Great input → Great output
@@ -445,7 +435,6 @@ RateWindow:
 
 * Build Leaves
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - Context is now great
 - Fill in the blanks
@@ -467,7 +456,6 @@ Also add a RateWindowChart that displays the last 24 hours with sorting and pagi
 
 ** Feel
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - I'm delegating the details
 - Reaping the benefits of our structured approach
@@ -512,7 +500,6 @@ IMPORTANT TOOL RESTRICTIONS:
 
 * Cleanup
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - Remove LLM idioms and artifacts
 - Move all imports to the top
@@ -537,7 +524,6 @@ Keep the code functionally identical, just make it look production-ready.
 
 ** Feel
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - This makes it feel like my code
 - Ready to commit
@@ -545,7 +531,6 @@ Keep the code functionally identical, just make it look production-ready.
 
 * Get feedback
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - Compose email
 - Update issue
@@ -553,7 +538,6 @@ Keep the code functionally identical, just make it look production-ready.
 
 * Ship It
 :PROPERTIES:
-:TEMPLATE: bullets
 :END:
 - Merge PR
 - Update and close issue

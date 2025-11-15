@@ -5,6 +5,9 @@ Programmatic slide generation from org-mode source.
 ## Quick Start
 
 ```bash
+# Install dependencies (first time only)
+make install
+
 # Build slides
 make build
 
@@ -18,10 +21,12 @@ make clean
 ## How it Works
 
 1. **Source**: `thetalk.org` - Org-mode file with presentation content
-2. **Parser**: `build.py` - Parses org-mode and generates HTML using Jinja2
-3. **Templates**: `templates/*.html` - Jinja2 templates for different slide types
-4. **Output**: `build/*.html` - Generated presentation slides
-5. **Server**: `server.py` - FastAPI server to serve static files
+2. **Styles**: `style.css` - Tailwind CSS with semantic element styling
+3. **Parser**: `build.py` - Parses org-mode and generates clean semantic HTML
+4. **Templates**: `templates/*.html` - Jinja2 templates (title, default, evolution, grid)
+5. **Static**: `static/` - Images and assets (copied to `build/static/`)
+6. **Output**: `build/*.html` + `build/static/` - Generated slides with compiled CSS
+7. **Server**: `server.py` - FastAPI server to serve static files
 
 ## Org-Mode Structure
 
@@ -66,8 +71,14 @@ Subtitle
 ## Development
 
 ```bash
-# Install dependencies
+# Install Node dependencies
+npm install
+
+# Install Python dependencies
 uv add orgparse fastapi jinja2 uvicorn
+
+# Build CSS
+npm run build:css
 
 # Run build
 python build.py
@@ -77,3 +88,14 @@ uv run uvicorn server:app --reload --port 8000
 ```
 
 Server runs at: http://localhost:8000
+
+## CSS Architecture
+
+All styling is done through Tailwind CSS with a clean separation:
+
+- **Semantic HTML**: `build.py` generates clean semantic HTML without inline classes
+- **Base Styles**: `style.css` defines styling for semantic elements (pre, code, table, ul, li, etc.)
+- **Component Wrappers**: Templates use `.slide-content` wrapper for content-specific styling
+- **Build Process**:
+  1. Copy `static/` → `build/static/` (images and static assets)
+  2. Tailwind CLI compiles `style.css` → `build/static/style.css` (minified)
