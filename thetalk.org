@@ -43,7 +43,6 @@ Making It Work on Large Projects
 - 2024 Tools/MCP servers provide filesystem access
 - 2025 Agentic coding assistants with full workflow automation
 
-
 * Getting Started
 :PROPERTIES:
 :TEMPLATE: title
@@ -318,7 +317,9 @@ if __name__ == "__main__":
 ├── skills/                        # Agent Skills (model-invoked capabilities)
 │   ├── api-design/
 │   │   ├── SKILL.md              # API design patterns and conventions
-│   │   └── examples.md
+│   │   ├── examples.md
+│   │   └── scripts/              # Scripts invoked by the skill
+│   │       └── validate-openapi.py
 │   └── security-review/
 │       └── SKILL.md
 ├── agents/                        # Custom subagents with separate context
@@ -497,7 +498,7 @@ Finally, summarize your findings.
 $ realpath [file1] [file2]
 #+end_src
 
-#+begin_src elisp
+#+begin_src lisp
 (defun rk-realpath ()
   "Copy the full path of current buffer to kill ring"
   (interactive)

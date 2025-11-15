@@ -24,6 +24,7 @@
             <h2 style="font-size: 1.25rem; font-weight: bold; color: #374151;">All Slides</h2>
             <button id="close-index" style="font-size: 1.5rem; color: #9ca3af; cursor: pointer; border: none; background: none; padding: 0;">&times;</button>
         </div>
+        <input type="text" id="index-search" placeholder="Search slides..." style="width: 100%; padding: 0.5rem; margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 0.25rem; font-size: 0.875rem;">
         <div id="index-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;"></div>
     </div>
 </div>
@@ -45,18 +46,32 @@
         `;
 
         // Index popover
-        document.getElementById('index-link').addEventListener('click', function(e) {
-            e.preventDefault();
+        const renderSlides = (filterText = '') => {
             const grid = document.getElementById('index-grid');
+            const filter = filterText.toLowerCase();
             grid.innerHTML = slides.map((slide, i) => {
                 const title = slide.replace('.html', '').replace(/-/g, ' ');
                 const isCurrent = i === idx;
+                const matches = !filter || title.toLowerCase().includes(filter) || (i + 1).toString().includes(filter);
+                if (!matches) return '';
                 return `<a href="${slide}" style="display: block; padding: 0.5rem; border: 1px solid ${isCurrent ? '#D97757' : '#e5e7eb'}; border-radius: 0.25rem; text-decoration: none; background: ${isCurrent ? '#fff5f2' : 'white'};">
                     <div style="font-weight: bold; color: #D97757; font-size: 0.875rem; margin-bottom: 0.125rem;">${i + 1}</div>
                     <div style="font-size: 0.75rem; color: #6b7280; text-transform: capitalize; line-height: 1.2;">${title}</div>
                 </a>`;
             }).join('');
+        };
+
+        document.getElementById('index-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            renderSlides();
             document.getElementById('index-popover').style.display = 'block';
+            const searchInput = document.getElementById('index-search');
+            searchInput.value = '';
+            searchInput.focus();
+        });
+
+        document.getElementById('index-search').addEventListener('keyup', function(e) {
+            renderSlides(e.target.value);
         });
 
         document.getElementById('close-index').addEventListener('click', function() {
@@ -90,7 +105,7 @@
         <div class="slide-content space-y-6 text-3xl leading-relaxed">
             <pre><code class="language-bash"># Get absolute paths for files
 $ realpath [file1] [file2]</code></pre>
-<pre><code class="language-elisp">(defun rk-realpath ()
+<pre><code class="language-lisp">(defun rk-realpath ()
   &quot;Copy the full path of current buffer to kill ring&quot;
   (interactive)
   (kill-new (buffer-file-name))
