@@ -352,37 +352,23 @@ if __name__ == "__main__":
 ** Overview
 #+begin_src bash
 .claude/
-├── settings.json                  # Team-shared configuration (committed to git)
-├── settings.local.json            # Personal overrides (gitignored)
-├── commands/                      # Custom slash commands
-│   ├── issue.md                  # Create issues, branches, PRs, worktrees
-│   ├── review.md                 # Code review workflow
-│   └── db/                       # Database operations namespace
-│       ├── migrate.md
-│       └── seed.md
-├── skills/                        # Agent Skills (model-invoked capabilities)
-│   ├── api-design/
-│   │   ├── SKILL.md              # API design patterns and conventions
-│   │   ├── examples.md
-│   │   └── scripts/              # Scripts invoked by the skill
-│   │       └── validate-openapi.py
-│   └── security-review/
-│       └── SKILL.md
-├── agents/                        # Custom subagents with separate context
-│   ├── code-reviewer.md          # Review PRs and suggest improvements
-│   ├── test-writer.md            # Generate comprehensive tests
-│   └── docs-updater.md           # Keep documentation in sync
-└── hooks/                         # Custom automation scripts
-    ├── post-tool-use.sh          # Auto-format on file edits
-    └── pre-commit.sh             # Lint and type-check before commits
-
-llm/                               # Application-specific documentation
-├── auth.md                        # Authentication & authorization
-├── billing.md                     # Payment processing
-├── api.md                         # API endpoints and schemas
-└── features.md                    # Cross-cutting feature docs
-
-CLAUDE.md                          # Root project instructions
+├── settings.json
+├── settings.local.json
+├── commands/
+│   ├── issue.md
+│   ├── changelog.md
+│   └── board-report.md
+├── skills/
+│   └── shot-scraper/
+│       ├── SKILL.md
+│       └── take_screenshots.sh
+└── agents/
+    └── playwright-tester.md
+llm/
+├── auth.md
+├── billing.md
+└── api.md
+CLAUDE.md
 #+end_src
 
 ** CLAUDE.md
@@ -611,18 +597,20 @@ Sounds good? Let's see the code.
 ** Prompt
 #+begin_src markdown
 Let's build the core foundation. We'll work in these files:
+
 - src/ratelimit/counter.py
 - src/models/rate_window.py
 
-Please create a function
+Please create this function in counter.py:
 
 def check_rate_limit(key: str, limit: int, window_seconds: int) -> bool
 
 that uses Redis PFADD and PFCOUNT for approximate counting.
 
-Uh, and we'll need datastructures as well. Please suggest better names, labels and help texts for these before coding the solution.
+Uh, and we'll need models as well. Please suggest better names, labels and help texts for these before 
+coding the solution:
 
-RateWindow:
+ratelimit.models.RateWindow:
    redis_key - str
    count - int (approximate)
    started_at - datetime
@@ -640,22 +628,18 @@ RateWindow:
 :PROPERTIES:
 :END:
 - Context is now great
+- Branch conversation for orthogonal concerns
 - Fill in the blanks
 - Let Claude do its thing
-- Trust the LLM with implementation details
 - Great for boilerplate, UI, CRUD, admin interfaces
 - Read PR and give feedback
 
 ** Prompt
 #+begin_src markdown
-Now let's add the admin interface for RateWindow. It should have:
-- All the standard fields visible
-- Filters for started_at and redis_key patterns
-- Search functionality
-- Read-only fields since this is historical data
+Now let's add the admin interface for RateWindow. Make it usable for the end user.
 
-Also add a RateWindowChart that displays the last 24 hours with sorting and pagination. Make it look good and 
-follow the patterns used elsewhere in the project.
+Also add a RateWindowChart at ratelimit/dashboard that displays the last 24 hours with sorting and pagination. 
+Make it look good and follow the patterns used elsewhere in the project.
 #+end_src
 
 ** Feel

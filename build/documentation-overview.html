@@ -104,37 +104,23 @@
     <div class="pt-4">
         <div class="slide-content space-y-6 text-3xl leading-relaxed">
             <pre><code class="language-bash">.claude/
-├── settings.json                  # Team-shared configuration (committed to git)
-├── settings.local.json            # Personal overrides (gitignored)
-├── commands/                      # Custom slash commands
-│   ├── issue.md                  # Create issues, branches, PRs, worktrees
-│   ├── review.md                 # Code review workflow
-│   └── db/                       # Database operations namespace
-│       ├── migrate.md
-│       └── seed.md
-├── skills/                        # Agent Skills (model-invoked capabilities)
-│   ├── api-design/
-│   │   ├── SKILL.md              # API design patterns and conventions
-│   │   ├── examples.md
-│   │   └── scripts/              # Scripts invoked by the skill
-│   │       └── validate-openapi.py
-│   └── security-review/
-│       └── SKILL.md
-├── agents/                        # Custom subagents with separate context
-│   ├── code-reviewer.md          # Review PRs and suggest improvements
-│   ├── test-writer.md            # Generate comprehensive tests
-│   └── docs-updater.md           # Keep documentation in sync
-└── hooks/                         # Custom automation scripts
-    ├── post-tool-use.sh          # Auto-format on file edits
-    └── pre-commit.sh             # Lint and type-check before commits
-
-llm/                               # Application-specific documentation
-├── auth.md                        # Authentication &amp; authorization
-├── billing.md                     # Payment processing
-├── api.md                         # API endpoints and schemas
-└── features.md                    # Cross-cutting feature docs
-
-CLAUDE.md                          # Root project instructions</code></pre>
+├── settings.json
+├── settings.local.json
+├── commands/
+│   ├── issue.md
+│   ├── changelog.md
+│   └── board-report.md
+├── skills/
+│   └── shot-scraper/
+│       ├── SKILL.md
+│       └── take_screenshots.sh
+└── agents/
+    └── playwright-tester.md
+llm/
+├── auth.md
+├── billing.md
+└── api.md
+CLAUDE.md</code></pre>
         </div>
     </div>
 </div>

@@ -104,18 +104,20 @@
     <div class="pt-4">
         <div class="slide-content space-y-6 text-3xl leading-relaxed">
             <pre><code class="language-markdown">Let&#x27;s build the core foundation. We&#x27;ll work in these files:
+
 - src/ratelimit/counter.py
 - src/models/rate_window.py
 
-Please create a function
+Please create this function in counter.py:
 
 def check_rate_limit(key: str, limit: int, window_seconds: int) -&gt; bool
 
 that uses Redis PFADD and PFCOUNT for approximate counting.
 
-Uh, and we&#x27;ll need datastructures as well. Please suggest better names, labels and help texts for these before coding the solution.
+Uh, and we&#x27;ll need models as well. Please suggest better names, labels and help texts for these before 
+coding the solution:
 
-RateWindow:
+ratelimit.models.RateWindow:
    redis_key - str
    count - int (approximate)
    started_at - datetime</code></pre>
