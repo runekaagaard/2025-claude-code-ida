@@ -405,6 +405,34 @@ for app in src/apps/*; do
 done
 #+end_src
 
+#+begin_src xml
+<directory_structure>
+queries/
+  py.scm
+server.py
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="queries/py.scm">
+(decorated_definition
+    (decorator)+ @sig.decorator
+)
+</file>
+
+<file path="server.py">
+"""MCP Symbol Edit Server - Symbol-based code editing."""
+
+def doit():
+    return 42
+
+if __name__ == "__main__":
+    main()
+</file>
+</files>
+#+end_src
+
 ** Cross Cutting Concerns
 #+begin_src markdown
 Dear Claude:
