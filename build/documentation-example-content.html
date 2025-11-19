@@ -91,15 +91,196 @@
 </script>
 
 
-<div class="h-full flex flex-col items-center justify-center text-center space-y-6 title-hide">
-    
-    
-    
-    <div class="text-2xl">
-        <pre><code class="language-bash">npm install -g @anthropic-ai/claude-code
-claude</code></pre>
+<div class="grid grid-cols-[minmax(250px,20%)_1fr] gap-[5vw] h-full">
+    <!-- Left Sidebar: Title & Images -->
+    <div class="pt-4 space-y-6">
+        <div class="space-y-3">
+            <h1 class="text-4xl font-bold text-gray-700 leading-tight">Documentation</h1>
+            
+            <h2 class="text-xl text-gray-500 font-medium">Example Content</h2>
+            
+        </div>
+
+        
     </div>
-    
+
+    <!-- Right Content Area -->
+    <div class="pt-4">
+        <div class="slide-content space-y-6 text-3xl leading-relaxed">
+            <pre><code class="language-markdown"># E-Commerce Platform - Project Instructions
+
+## Project Overview
+
+This is a large Django-based e-commerce platform handling the full
+product lifecycle from inventory → orders → fulfillment → returns.
+The system processes ~50,000 orders/month with complex shipping,
+pricing, and warehouse management.
+
+## Initial Setup &amp; Understanding
+
+When working with this project, ALWAYS start by reading:
+
+1. src/shop/settings.py - Main Django settings
+2. src/shop/urls.py - Global URL routing
+3. llm/catalog.md - Core product/inventory documentation
+
+## Project Structure
+
+### Django Apps Architecture
+
+#### Core Apps (High Priority)
+- catalog - Products, variants, inventory (MOST IMPORTANT)
+- orders - Order management and checkout flow
+- customers - User accounts, addresses, preferences
+- cart - Shopping cart and session management
+- payments - Payment processing and refunds
+- shipping - Carrier integration and fulfillment
+
+#### Financial &amp; Operations Apps
+- pricing - Dynamic pricing, promotions, discounts
+- warehouse - Multi-warehouse inventory tracking
+- returns - Return merchandise authorization (RMA)
+- analytics - Sales reporting and business intelligence
+
+#### Integration Apps
+- stripe_integration - Payment gateway
+- sendgrid - Transactional email
+- shopify_sync - External marketplace sync
+- fedex - Shipping rate calculation and label generation
+
+#### Legacy/Deprecated Apps
+- paypal - ⚠️ DEPRECATED (replaced by stripe_integration)
+- old_checkout - ⚠️ DEPRECATED (migrated to orders app)
+
+## Core Data Architecture
+
+The system uses Order as the central entity:
+
+### Central Models
+- Order - Core order entity (src/shop/apps/orders/models.py)
+- OrderLine - Individual line items
+- Product - Product catalog (src/shop/apps/catalog/models.py)
+- ProductVariant - Size/color/SKU variants
+- Customer - User and guest checkout data
+- ShippingMethod - Carrier and rate information
+
+### Key Relationships
+- Order ↔ Customer (one customer, many orders)
+- Order ↔ OrderLine ↔ ProductVariant (order composition)
+- Order ↔ Payment ↔ Transaction (financial flow)
+- ProductVariant ↔ InventoryLocation (warehouse stock)
+
+## Working Guidelines
+
+### Documentation First Approach
+When a task mentions specific apps, you MUST:
+1. Read the corresponding llm/[app_name].md first
+2. Do not search code until you&#x27;ve read docs
+3. Documentation contains data flow and integration patterns
+
+### File Reading Strategy
+4. Focus on models.py → views.py → api.py  → admin.py
+
+### Coding Conventions
+- Always Use function-based views
+- Always validate inventory before order placement
+- Never modify Orders after payment capture
+- Use timezone-aware datetimes for all timestamps
+- Prefer select_related/prefetch_related for performance
+
+### Database Performance
+- When iterating querysets, use values_list() not values()
+- Always add select_related() for foreign keys
+- Use prefetch_related() for reverse relations
+- Index fields used in filters and ordering
+
+## Danish Terminology
+
+### Key Terms (English → Danish)
+- Order = Ordre (orders.Order)
+- Customer = Kunde (customers.Customer)
+- Product = Produkt (catalog.Product)
+- Cart = Kurv (cart.Cart)
+- Shipping = Forsendelse
+- Payment = Betaling
+- Warehouse = Lager (warehouse.Location)
+- Invoice = Faktura
+- Return = Retur (returns.Return)
+- Discount = Rabat (pricing.Coupon)
+
+## Business Domain Knowledge
+
+### Order Processing Flow
+Cart → Checkout → Payment → Fulfillment → Shipping
+
+### Key Business Rules
+- Inventory reservations expire after 15 minutes
+- Orders immutable after payment capture
+- Returns require original order within 30 days
+- Multi-warehouse allocation: closest warehouse first
+
+## External System Integrations
+
+- Stripe - Payment processing and webhooks
+- FedEx/UPS APIs - Shipping rates and label generation
+- SendGrid - Transactional email with templates
+- Shopify - Marketplace product sync (bidirectional)
+- Google Analytics - E-commerce tracking events
+- Sentry - Error monitoring and alerting
+
+## Technology Stack
+
+- Django 4.2 with some legacy patterns
+- React.js for admin dashboard
+- Celery for background tasks (inventory sync, emails)
+- PostgreSQL with full-text search
+- Redis for caching and cart sessions
+- Elasticsearch for product search
+- Stripe Elements for payment UI
+- Tailwind CSS for storefront
+
+## App Documentation
+
+All major apps documented in llm/ directory:
+
+- llm/catalog.md - Product and inventory management
+- llm/orders.md - Order processing and fulfillment
+- llm/payments.md - Payment flow and Stripe integration
+- llm/shipping.md - Carrier integration and rates
+- llm/pricing.md - Dynamic pricing and promotions
+- llm/warehouse.md - Multi-warehouse inventory
+- llm/returns.md - RMA process and refunds
+
+## Important Notes
+
+- Production e-commerce - handle PCI compliance
+- Payment card data never stored (Stripe tokenization)
+- Inventory race conditions - use database locks
+- Orders are immutable after payment capture
+- Complex tax calculation (Avalara integration)
+- GDPR compliance for EU customers
+
+## Quick Reference
+
+- Most important app: catalog (products and inventory)
+- Main user flow: cart → orders → payments → shipping
+- Financial system: payments + stripe_integration
+- Search: Elasticsearch via catalog.search module
+- Background jobs: Celery tasks in each app&#x27;s tasks.py
+- Settings: src/shop/settings.py
+- URL routing: Check individual app urls.py files
+
+## Coding Memories
+
+- Never trust client-side price calculations
+- Always recalculate totals server-side
+- Inventory checks must use SELECT FOR UPDATE
+- Payment webhooks are async - handle idempotency
+- Use money library for currency, never floats
+- Cart sessions expire - handle gracefully
+- Email sending is async via Celery</code></pre>
+        </div>
+    </div>
 </div>
 
 

@@ -91,15 +91,131 @@
 </script>
 
 
-<div class="h-full flex flex-col items-center justify-center text-center space-y-6 title-hide">
-    
-    
-    
-    <div class="text-2xl">
-        <pre><code class="language-bash">npm install -g @anthropic-ai/claude-code
-claude</code></pre>
+<div class="grid grid-cols-[minmax(250px,20%)_1fr] gap-[5vw] h-full">
+    <!-- Left Sidebar: Title & Images -->
+    <div class="pt-4 space-y-6">
+        <div class="space-y-3">
+            <h1 class="text-4xl font-bold text-gray-700 leading-tight">Documentation</h1>
+            
+            <h2 class="text-xl text-gray-500 font-medium">llm/cart.md</h2>
+            
+        </div>
+
+        
     </div>
-    
+
+    <!-- Right Content Area -->
+    <div class="pt-4">
+        <div class="slide-content space-y-6 text-3xl leading-relaxed">
+            <pre><code class="language-markdown"># Cart App - Shopping Cart and Session Management
+
+## Overview
+Session-based cart with inventory reservations. Critical for order
+conversion - uses SELECT FOR UPDATE to prevent race conditions.
+
+## URL Structure
+**File**: src/shop/apps/cart/urls.py
+
+/cart/ - Display cart (cart_view)
+/cart/add/{product_id}/ - Add to cart (add_to_cart)
+/cart/update/{item_id}/ - Update quantity (update_cart_item)
+/cart/api/totals/ - Get totals (cart_totals_api)
+
+## Core Models
+**File**: src/shop/apps/cart/models.py
+
+- Cart: user (FK), session_key (str for guests)
+- CartItem: cart, product_variant, quantity, unit_price (locked)
+- CartReservation: expires_at (15 min), status (ACTIVE/EXPIRED)
+
+## Key Business Processes
+
+### Add to Cart
+**File**: src/shop/apps/cart/views.py:add_to_cart()
+
+1. Get/create Cart (by user or session_key)
+2. Validate ProductVariant
+3. Check inventory with SELECT FOR UPDATE
+4. Create CartItem with current price
+5. Create CartReservation (15-min expiry)
+
+### Price Calculation
+**File**: src/shop/apps/cart/views.py:calculate_cart_totals()
+
+Order matters: Subtotal → PriceRules → Coupons → Shipping → Tax
+Uses pricing.apply_rules(cart, customer)
+
+### Cart Abandonment
+**File**: src/shop/apps/cart/tasks.py
+
+Celery task every 5 minutes:
+- Release expired reservations
+- Clear guest carts &gt;24 hours
+- Send abandonment emails
+
+## Integration Points
+
+- catalog: ProductVariant pricing, InventoryLocation
+- pricing: PriceRule, Coupon (always recalculate server-side)
+- customers: get_or_create_cart(), addresses for shipping
+- checkout: create_order_from_cart() converts cart
+
+## Frontend Components
+**File**: src/shop/apps/cart/static/js/components/
+
+- CartDisplay.jsx: Main UI, optimistic updates
+- CartItem.jsx: Quantity with debounce (300ms)
+- CartSummary.jsx: Totals breakdown
+
+### Common Patterns
+```jsx
+// Find option
+const variant = findOption(this.props.options.catalog.variants, id)
+
+// Update with debounce
+handleChange = debounce((id, qty) =&gt; {
+  post(&#x27;/cart/update/&#x27; + id + &#x27;/&#x27;, {quantity: qty}, ...)
+}, 300)
+
+// Format price
+import {formatPrice} from &#x27;nibblr/base&#x27;
+&lt;span&gt;{formatPrice(item.total)}&lt;/span&gt;
+```
+
+## Critical Rules
+
+### Security
+Never trust client prices - always fetch server-side:
+```python
+# WRONG
+cart_item.unit_price = request.POST.get(&#x27;price&#x27;)
+
+# RIGHT
+cart_item.unit_price = variant.get_current_price(customer)
+```
+
+### Race Conditions
+Use locks for inventory:
+```python
+with transaction.atomic():
+    inventory = InventoryLocation.objects.select_for_update()
+        .get(product_variant=variant)
+```
+
+### Performance
+- Cart cached 5 minutes (invalidate on modification)
+- Use select_related(&#x27;product_variant__product&#x27;)
+- Debounce frontend updates (300ms)
+
+## Common Issues
+
+### &quot;Total mismatch at checkout&quot;
+Recalculate at checkout start: checkout/views.py:begin_checkout()
+
+### &quot;Guest cart lost after login&quot;
+Check merge logic: customers/signals.py:merge_guest_cart_on_login</code></pre>
+        </div>
+    </div>
 </div>
 
 

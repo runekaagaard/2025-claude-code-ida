@@ -383,6 +383,182 @@ CLAUDE.md
 - Tech stack, modules, conventions, where to find things
 - Don't use directory CLAUDE.md's
 
+** Example Content
+#+begin_src markdown
+# E-Commerce Platform - Project Instructions
+
+## Project Overview
+
+This is a large Django-based e-commerce platform handling the full
+product lifecycle from inventory → orders → fulfillment → returns.
+The system processes ~50,000 orders/month with complex shipping,
+pricing, and warehouse management.
+
+## Initial Setup & Understanding
+
+When working with this project, ALWAYS start by reading:
+
+1. src/shop/settings.py - Main Django settings
+2. src/shop/urls.py - Global URL routing
+3. llm/catalog.md - Core product/inventory documentation
+
+## Project Structure
+
+### Django Apps Architecture
+
+#### Core Apps (High Priority)
+- catalog - Products, variants, inventory (MOST IMPORTANT)
+- orders - Order management and checkout flow
+- customers - User accounts, addresses, preferences
+- cart - Shopping cart and session management
+- payments - Payment processing and refunds
+- shipping - Carrier integration and fulfillment
+
+#### Financial & Operations Apps
+- pricing - Dynamic pricing, promotions, discounts
+- warehouse - Multi-warehouse inventory tracking
+- returns - Return merchandise authorization (RMA)
+- analytics - Sales reporting and business intelligence
+
+#### Integration Apps
+- stripe_integration - Payment gateway
+- sendgrid - Transactional email
+- shopify_sync - External marketplace sync
+- fedex - Shipping rate calculation and label generation
+
+#### Legacy/Deprecated Apps
+- paypal - ⚠️ DEPRECATED (replaced by stripe_integration)
+- old_checkout - ⚠️ DEPRECATED (migrated to orders app)
+
+## Core Data Architecture
+
+The system uses Order as the central entity:
+
+### Central Models
+- Order - Core order entity (src/shop/apps/orders/models.py)
+- OrderLine - Individual line items
+- Product - Product catalog (src/shop/apps/catalog/models.py)
+- ProductVariant - Size/color/SKU variants
+- Customer - User and guest checkout data
+- ShippingMethod - Carrier and rate information
+
+### Key Relationships
+- Order ↔ Customer (one customer, many orders)
+- Order ↔ OrderLine ↔ ProductVariant (order composition)
+- Order ↔ Payment ↔ Transaction (financial flow)
+- ProductVariant ↔ InventoryLocation (warehouse stock)
+
+## Working Guidelines
+
+### Documentation First Approach
+When a task mentions specific apps, you MUST:
+1. Read the corresponding llm/[app_name].md first
+2. Do not search code until you've read docs
+3. Documentation contains data flow and integration patterns
+
+### File Reading Strategy
+4. Focus on models.py → views.py → api.py  → admin.py
+
+### Coding Conventions
+- Always Use function-based views
+- Always validate inventory before order placement
+- Never modify Orders after payment capture
+- Use timezone-aware datetimes for all timestamps
+- Prefer select_related/prefetch_related for performance
+
+### Database Performance
+- When iterating querysets, use values_list() not values()
+- Always add select_related() for foreign keys
+- Use prefetch_related() for reverse relations
+- Index fields used in filters and ordering
+
+## Danish Terminology
+
+### Key Terms (English → Danish)
+- Order = Ordre (orders.Order)
+- Customer = Kunde (customers.Customer)
+- Product = Produkt (catalog.Product)
+- Cart = Kurv (cart.Cart)
+- Shipping = Forsendelse
+- Payment = Betaling
+- Warehouse = Lager (warehouse.Location)
+- Invoice = Faktura
+- Return = Retur (returns.Return)
+- Discount = Rabat (pricing.Coupon)
+
+## Business Domain Knowledge
+
+### Order Processing Flow
+Cart → Checkout → Payment → Fulfillment → Shipping
+
+### Key Business Rules
+- Inventory reservations expire after 15 minutes
+- Orders immutable after payment capture
+- Returns require original order within 30 days
+- Multi-warehouse allocation: closest warehouse first
+
+## External System Integrations
+
+- Stripe - Payment processing and webhooks
+- FedEx/UPS APIs - Shipping rates and label generation
+- SendGrid - Transactional email with templates
+- Shopify - Marketplace product sync (bidirectional)
+- Google Analytics - E-commerce tracking events
+- Sentry - Error monitoring and alerting
+
+## Technology Stack
+
+- Django 4.2 with some legacy patterns
+- React.js for admin dashboard
+- Celery for background tasks (inventory sync, emails)
+- PostgreSQL with full-text search
+- Redis for caching and cart sessions
+- Elasticsearch for product search
+- Stripe Elements for payment UI
+- Tailwind CSS for storefront
+
+## App Documentation
+
+All major apps documented in llm/ directory:
+
+- llm/catalog.md - Product and inventory management
+- llm/orders.md - Order processing and fulfillment
+- llm/payments.md - Payment flow and Stripe integration
+- llm/shipping.md - Carrier integration and rates
+- llm/pricing.md - Dynamic pricing and promotions
+- llm/warehouse.md - Multi-warehouse inventory
+- llm/returns.md - RMA process and refunds
+
+## Important Notes
+
+- Production e-commerce - handle PCI compliance
+- Payment card data never stored (Stripe tokenization)
+- Inventory race conditions - use database locks
+- Orders are immutable after payment capture
+- Complex tax calculation (Avalara integration)
+- GDPR compliance for EU customers
+
+## Quick Reference
+
+- Most important app: catalog (products and inventory)
+- Main user flow: cart → orders → payments → shipping
+- Financial system: payments + stripe_integration
+- Search: Elasticsearch via catalog.search module
+- Background jobs: Celery tasks in each app's tasks.py
+- Settings: src/shop/settings.py
+- URL routing: Check individual app urls.py files
+
+## Coding Memories
+
+- Never trust client-side price calculations
+- Always recalculate totals server-side
+- Inventory checks must use SELECT FOR UPDATE
+- Payment webhooks are async - handle idempotency
+- Use money library for currency, never floats
+- Cart sessions expire - handle gracefully
+- Email sending is async via Celery
+#+end_src
+
 ** LLM
 :PROPERTIES:
 :END:
@@ -431,6 +607,117 @@ if __name__ == "__main__":
     main()
 </file>
 </files>
+#+end_src
+
+** llm/cart.md
+#+begin_src markdown
+# Cart App - Shopping Cart and Session Management
+
+## Overview
+Session-based cart with inventory reservations. Critical for order
+conversion - uses SELECT FOR UPDATE to prevent race conditions.
+
+## URL Structure
+**File**: src/shop/apps/cart/urls.py
+
+/cart/ - Display cart (cart_view)
+/cart/add/{product_id}/ - Add to cart (add_to_cart)
+/cart/update/{item_id}/ - Update quantity (update_cart_item)
+/cart/api/totals/ - Get totals (cart_totals_api)
+
+## Core Models
+**File**: src/shop/apps/cart/models.py
+
+- Cart: user (FK), session_key (str for guests)
+- CartItem: cart, product_variant, quantity, unit_price (locked)
+- CartReservation: expires_at (15 min), status (ACTIVE/EXPIRED)
+
+## Key Business Processes
+
+### Add to Cart
+**File**: src/shop/apps/cart/views.py:add_to_cart()
+
+1. Get/create Cart (by user or session_key)
+2. Validate ProductVariant
+3. Check inventory with SELECT FOR UPDATE
+4. Create CartItem with current price
+5. Create CartReservation (15-min expiry)
+
+### Price Calculation
+**File**: src/shop/apps/cart/views.py:calculate_cart_totals()
+
+Order matters: Subtotal → PriceRules → Coupons → Shipping → Tax
+Uses pricing.apply_rules(cart, customer)
+
+### Cart Abandonment
+**File**: src/shop/apps/cart/tasks.py
+
+Celery task every 5 minutes:
+- Release expired reservations
+- Clear guest carts >24 hours
+- Send abandonment emails
+
+## Integration Points
+
+- catalog: ProductVariant pricing, InventoryLocation
+- pricing: PriceRule, Coupon (always recalculate server-side)
+- customers: get_or_create_cart(), addresses for shipping
+- checkout: create_order_from_cart() converts cart
+
+## Frontend Components
+**File**: src/shop/apps/cart/static/js/components/
+
+- CartDisplay.jsx: Main UI, optimistic updates
+- CartItem.jsx: Quantity with debounce (300ms)
+- CartSummary.jsx: Totals breakdown
+
+### Common Patterns
+```jsx
+// Find option
+const variant = findOption(this.props.options.catalog.variants, id)
+
+// Update with debounce
+handleChange = debounce((id, qty) => {
+  post('/cart/update/' + id + '/', {quantity: qty}, ...)
+}, 300)
+
+// Format price
+import {formatPrice} from 'nibblr/base'
+<span>{formatPrice(item.total)}</span>
+```
+
+## Critical Rules
+
+### Security
+Never trust client prices - always fetch server-side:
+```python
+# WRONG
+cart_item.unit_price = request.POST.get('price')
+
+# RIGHT
+cart_item.unit_price = variant.get_current_price(customer)
+```
+
+### Race Conditions
+Use locks for inventory:
+```python
+with transaction.atomic():
+    inventory = InventoryLocation.objects.select_for_update()
+        .get(product_variant=variant)
+```
+
+### Performance
+- Cart cached 5 minutes (invalidate on modification)
+- Use select_related('product_variant__product')
+- Debounce frontend updates (300ms)
+
+## Common Issues
+
+### "Total mismatch at checkout"
+Recalculate at checkout start: checkout/views.py:begin_checkout()
+
+### "Guest cart lost after login"
+Check merge logic: customers/signals.py:merge_guest_cart_on_login
 #+end_src
 
 ** Cross Cutting Concerns
